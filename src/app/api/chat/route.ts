@@ -51,11 +51,11 @@ export async function POST(req: NextRequest) {
 
     let ragContext = "";
     if (relevantChunks.length > 0) {
-      const info = getManualInfo();
+      const sources = [...new Set(relevantChunks.map((c) => c.source))];
       ragContext =
-        `\n\n## INFORMACIÓN DEL MANUAL TÉCNICO\n` +
-        `Fuente: "${info.title}" (${info.totalPages} páginas)\n` +
-        `Contenido relevante:\n${relevantChunks.map((c, i) => `[${i + 1}] ${c}`).join("\n\n")}`;
+        `\n\n## INFORMACIÓN DE MANUALES TÉCNICOS\n` +
+        `Fuentes: ${sources.join(", ")}\n` +
+        `Contenido relevante:\n${relevantChunks.map((c, i) => `[${i + 1}] ${c.text}`).join("\n\n")}`;
     }
 
     const body = JSON.stringify({

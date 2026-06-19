@@ -1,4 +1,5 @@
-import manualData from "./manual-knowledge.json";
+import sweissData from "./knowledge-sweiss.json";
+import dcmData from "./knowledge-dcm.json";
 
 interface ManualKnowledge {
   title: string;
@@ -7,7 +8,10 @@ interface ManualKnowledge {
   chunks: string[];
 }
 
-const data = manualData as ManualKnowledge;
+const manuals: Record<string, ManualKnowledge> = {
+  sweiss: sweissData as ManualKnowledge,
+  dcm: dcmData as ManualKnowledge,
+};
 
 function tokenize(text: string): string[] {
   return text
@@ -27,23 +31,32 @@ function scoreChunk(chunk: string, queryTerms: string[]): number {
   return score;
 }
 
-export function searchManual(query: string, topK = 3): string[] {
+export function searchManual(query: string, topK = 3): { text: string; source: string }[] {
   const terms = tokenize(query);
   if (terms.length === 0) return [];
 
-  const scored = data.chunks
-    .map((chunk) => ({ chunk, score: scoreChunk(chunk, terms) }))
-    .filter((c) => c.score > 0)
-    .sort((a, b) => b.score - a.score)
-    .slice(0, topK);
+  const results: { text: string; source: string; score: number }[] = [];
 
-  return scored.map((c) => c.chunk);
+  for (const [id, manual] of Object.entries(manuals)) {
+    for (const chunk of manual.chunks) {
+      const score = scoreChunk(chunk, terms);
+      if (score > 0) {
+        results.push({ text: chunk, source: `${manual.title} (${id})`, score });
+      }
+    }
+  }
+
+  return results
+    .sort((a, b) => b.score - a.score)
+    .slice(0, topK)
+    .map(({ text, source }) => ({ text, source }));
 }
 
 export function getManualInfo() {
-  return {
-    title: data.title,
-    source: data.source,
-    totalPages: data.totalPages,
-  };
+  return Object.entries(manuals).map(([id, m]) => ({
+    id,
+    title: m.title,
+    source: m.source,
+    totalPages: m.totalPages,
+  }));
 }

@@ -30,6 +30,8 @@ const translations: Record<Language, Record<string, string | string[]>> = {
     "library.subtitle": "Welding manuals, standards, and technical resources for professionals",
     "library.view": "View PDF",
     "library.desc.sweiss": "Complete welding manual covering SMAW, GMAW (MIG/MAG), GTAW (TIG), FCAW, and SAW processes. Includes electrode classification (AWS), welding machine types, polarity, amperage tables, and safety. 72 pages.",
+    "library.desc.dcm": "Introductory welding guide covering SMAW, MIG/MAG, TIG, and oxyfuel processes. Includes basics of weldability, materials, safety equipment, and joint preparation. 21 pages.",
+    "library.filter": "Filter by process",
 
     /* Hero */
     "hero.badge": "Steel fabrication & engineering since 1988",
@@ -268,6 +270,8 @@ const translations: Record<Language, Record<string, string | string[]>> = {
     "library.subtitle": "Manuales de soldadura, normas y recursos técnicos para profesionales",
     "library.view": "Ver PDF",
     "library.desc.sweiss": "Manual completo de soldadura que cubre procesos SMAW, GMAW (MIG/MAG), GTAW (TIG), FCAW y SAW. Incluye clasificación de electrodos (AWS), tipos de máquinas de soldar, polaridad, tablas de amperaje y seguridad. 72 páginas.",
+    "library.desc.dcm": "Guía introductoria de soldadura que cubre procesos SMAW, MIG/MAG, TIG y oxigas. Incluye conceptos básicos de soldabilidad, materiales, equipos de seguridad y preparación de juntas. 21 páginas.",
+    "library.filter": "Filtrar por proceso",
 
     /* Hero */
     "hero.badge": "Fabricación de acero e ingeniería desde 1988",
@@ -506,6 +510,8 @@ const translations: Record<Language, Record<string, string | string[]>> = {
     "library.subtitle": "Manuels de soudage, normes et ressources techniques pour les professionnels",
     "library.view": "Voir PDF",
     "library.desc.sweiss": "Manuel complet de soudage couvrant les procédés SMAW, GMAW (MIG/MAG), GTAW (TIG), FCAW et SAW. Inclut la classification des électrodes (AWS), les types de machines à souder, la polarité, les tableaux d'ampérage et la sécurité. 72 pages.",
+    "library.desc.dcm": "Guide d'introduction au soudage couvrant les procédés SMAW, MIG/MAG, TIG et oxygaz. Inclut les bases de la soudabilité, les matériaux, les équipements de sécurité et la préparation des joints. 21 pages.",
+    "library.filter": "Filtrer par procédé",
 
     /* Hero */
     "hero.badge": "Fabrication d'acier et ingénierie depuis 1988",
@@ -744,6 +750,8 @@ const translations: Record<Language, Record<string, string | string[]>> = {
     "library.subtitle": "Schweißhandbücher, Normen und technische Ressourcen für Fachleute",
     "library.view": "PDF anzeigen",
     "library.desc.sweiss": "Vollständiges Schweißhandbuch mit SMAW-, GMAW- (MIG/MAG), GTAW- (TIG), FCAW- und SAW-Verfahren. Enthält Elektrodenklassifizierung (AWS), Schweißmaschinentypen, Polarität, Stromstärkentabellen und Sicherheit. 72 Seiten.",
+    "library.desc.dcm": "Einführung in das Schweißen mit SMAW-, MIG/MAG-, TIG- und Gasschweißverfahren. Enthält Grundlagen der Schweißbarkeit, Werkstoffe, Sicherheitsausrüstung und Vorbereitung von Verbindungen. 21 Seiten.",
+    "library.filter": "Nach Verfahren filtern",
 
     /* Hero */
     "hero.badge": "Stahlbau und Ingenieurwesen seit 1988",

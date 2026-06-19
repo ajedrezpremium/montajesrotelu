@@ -1,23 +1,35 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { BookOpen, Download, FileText } from "lucide-react";
+import { BookOpen, Download, FileText, Filter } from "lucide-react";
 import { useLang } from "@/lib/language";
+import libraryData from "@/lib/library-data.json";
 
-const manuals = [
-  {
-    id: "sweiss",
-    cover: "https://img.freepik.com/free-vector/welding-cartoon-banner-with-workers_33099-493.jpg",
-    pages: 72,
-    language: "ES",
-    format: "PDF",
-    size: "9.4 MB",
-    url: "/manuals/manual-basico-soldadura-sweiss.pdf",
-  },
-];
+interface Manual {
+  id: string;
+  title: string;
+  lang: string;
+  size: string;
+  pages: number;
+  year: string;
+  cover: string;
+  descKey: string;
+  url: string;
+  tags: string[];
+}
+
+const manuals = libraryData as Manual[];
+
+const allTags = [...new Set(manuals.flatMap((m) => m.tags))].sort();
 
 export default function Library() {
   const { t } = useLang();
+  const [activeTag, setActiveTag] = useState<string | null>(null);
+
+  const filtered = activeTag
+    ? manuals.filter((m) => m.tags.includes(activeTag))
+    : manuals;
 
   return (
     <section id="library" className="relative py-24 bg-steel/50">
@@ -26,7 +38,7 @@ export default function Library() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-12"
         >
           <span className="inline-block text-xs tracking-[0.2em] text-orange uppercase mb-4">
             ROTELU
@@ -39,14 +51,42 @@ export default function Library() {
           </p>
         </motion.div>
 
+        <div className="flex flex-wrap items-center justify-center gap-2 mb-10">
+          <Filter size={13} className="text-zinc-500" />
+          <button
+            onClick={() => setActiveTag(null)}
+            className={`px-3 py-1 text-[11px] uppercase tracking-wider rounded-sm transition-all ${
+              !activeTag
+                ? "bg-orange text-white"
+                : "bg-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-700"
+            }`}
+          >
+            {t("library.filter")}
+          </button>
+          {allTags.map((tag) => (
+            <button
+              key={tag}
+              onClick={() => setActiveTag(tag)}
+              className={`px-3 py-1 text-[11px] font-mono tracking-wider rounded-sm transition-all ${
+                activeTag === tag
+                  ? "bg-orange text-white"
+                  : "bg-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-700"
+              }`}
+            >
+              {tag}
+            </button>
+          ))}
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {manuals.map((manual, i) => (
+          {filtered.map((manual, i) => (
             <motion.div
               key={manual.id}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
+              layout
               className="group bg-zinc-900/80 border border-zinc-800 hover:border-orange/40 transition-all duration-500 overflow-hidden"
             >
               <div className="relative h-48 overflow-hidden">
@@ -56,29 +96,39 @@ export default function Library() {
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-transparent to-transparent" />
-                <div className="absolute top-3 right-3 flex gap-2">
+                <div className="absolute top-3 right-3 flex gap-1.5 flex-wrap justify-end">
                   <span className="px-2 py-1 text-[10px] font-mono bg-zinc-900/80 text-zinc-400 border border-zinc-700">
-                    {manual.format}
+                    PDF
                   </span>
                   <span className="px-2 py-1 text-[10px] font-mono bg-zinc-900/80 text-zinc-400 border border-zinc-700">
                     {manual.pages}p
                   </span>
                   <span className="px-2 py-1 text-[10px] font-mono bg-zinc-900/80 text-zinc-400 border border-zinc-700">
-                    {manual.language}
+                    {manual.lang}
                   </span>
                 </div>
               </div>
               <div className="p-5">
                 <div className="flex items-center gap-2 mb-3">
                   <BookOpen size={14} className="text-orange shrink-0" />
-                  <span className="text-xs text-zinc-500">SWEISS — 2025</span>
+                  <span className="text-xs text-zinc-500">{manual.year}</span>
                 </div>
-                <h3 className="text-sm font-semibold text-white mb-2 leading-relaxed">
-                  Manual Básico de Soldadura
+                <h3 className="text-sm font-semibold text-white mb-2 leading-relaxed line-clamp-2">
+                  {manual.title}
                 </h3>
                 <p className="text-xs text-zinc-500 leading-relaxed mb-4 line-clamp-3">
-                  {t("library.desc.sweiss")}
+                  {t(manual.descKey)}
                 </p>
+                <div className="flex flex-wrap gap-1.5 mb-3">
+                  {manual.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="px-1.5 py-0.5 text-[9px] font-mono bg-zinc-800 text-zinc-500 border border-zinc-700/50"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
                 <div className="flex items-center justify-between pt-3 border-t border-zinc-800">
                   <span className="text-[11px] text-zinc-600">{manual.size}</span>
                   <a
@@ -96,6 +146,12 @@ export default function Library() {
             </motion.div>
           ))}
         </div>
+
+        {filtered.length === 0 && (
+          <p className="text-center text-zinc-600 text-sm mt-8">
+            No manuals match this filter.
+          </p>
+        )}
       </div>
     </section>
   );
