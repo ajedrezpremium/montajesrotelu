@@ -75,7 +75,7 @@ export default function Footer() {
             <ul className="space-y-2 text-zinc-600 text-xs">
               <li>Pontevedra, Spain</li>
               <li>info@rotelu.es</li>
-              <li>+34 XXX XXX XXX</li>
+              <li>+34 986 63 96 06</li>
             </ul>
           </div>
         </div>
