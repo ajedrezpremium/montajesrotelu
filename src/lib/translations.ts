@@ -236,7 +236,8 @@ const translations: Record<Language, Record<string, string | string[]>> = {
     "footer.solutions": "Solutions",
     "footer.company": "Company",
     "footer.contact": "Contact",
-    "footer.copyright": "© {year} Montajes Rotelu S.L. All rights reserved.",
+    "footer.copyright": "© {year} ROTELU — All rights reserved.",
+    "footer.legal": "Legal Notice & Privacy Policy",
 
     /* Chatbot */
     "chatbot.greeting": "Hello! I'm Rotelu's virtual assistant. How can I help you today?",
@@ -473,7 +474,8 @@ const translations: Record<Language, Record<string, string | string[]>> = {
     "footer.solutions": "Soluciones",
     "footer.company": "Empresa",
     "footer.contact": "Contacto",
-    "footer.copyright": "© {year} Montajes Rotelu S.L. Todos los derechos reservados.",
+    "footer.copyright": "© {year} ROTELU — Todos los derechos reservados.",
+    "footer.legal": "Aviso Legal y Política de Privacidad",
 
     /* Chatbot */
     "chatbot.greeting": "¡Hola! Soy el asistente virtual de Rotelu. ¿En qué puedo ayudarle hoy?",
@@ -710,7 +712,8 @@ const translations: Record<Language, Record<string, string | string[]>> = {
     "footer.solutions": "Solutions",
     "footer.company": "Société",
     "footer.contact": "Contact",
-    "footer.copyright": "© {year} Montajes Rotelu S.L. Tous droits réservés.",
+    "footer.copyright": "© {year} ROTELU — Tous droits réservés.",
+    "footer.legal": "Mentions Légales & Politique de Confidentialité",
 
     /* Chatbot */
     "chatbot.greeting": "Bonjour ! Je suis l'assistant virtuel de Rotelu. Comment puis-je vous aider aujourd'hui ?",
@@ -947,7 +950,8 @@ const translations: Record<Language, Record<string, string | string[]>> = {
     "footer.solutions": "Lösungen",
     "footer.company": "Unternehmen",
     "footer.contact": "Kontakt",
-    "footer.copyright": "© {year} Montajes Rotelu S.L. Alle Rechte vorbehalten.",
+    "footer.copyright": "© {year} ROTELU — Alle Rechte vorbehalten.",
+    "footer.legal": "Impressum & Datenschutz",
 
     /* Chatbot */
     "chatbot.greeting": "Hallo! Ich bin der virtuelle Assistent von Rotelu. Wie kann ich Ihnen heute helfen?",

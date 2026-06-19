@@ -85,8 +85,17 @@ export default function Footer() {
             {t("footer.copyright").replace("{year}", String(year))}
           </p>
           <div className="flex items-center gap-4 text-zinc-700 text-xs">
+            <a
+              href="/info"
+              className="hover:text-zinc-400 transition-colors underline underline-offset-4 decoration-zinc-800"
+            >
+              {t("footer.legal")}
+            </a>
+            <span className="w-px h-3 bg-zinc-800" />
             <span>{t("hero.cert1")}</span>
+            <span className="w-px h-3 bg-zinc-800" />
             <span>{t("hero.cert2")}</span>
+            <span className="w-px h-3 bg-zinc-800" />
             <span>{t("hero.cert3")}</span>
           </div>
         </div>
