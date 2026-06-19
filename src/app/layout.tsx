@@ -15,6 +15,8 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const baseUrl = "https://rotelu-web.vercel.app";
+
 export const metadata: Metadata = {
   title: "ROTELU | Engineering Steel Solutions — Heavy Steel Fabrication & Certified Welding",
   description:
@@ -33,12 +35,34 @@ export const metadata: Metadata = {
     "soldadura certificada",
     "estructuras metálicas",
   ],
+  metadataBase: new URL(baseUrl),
+  alternates: {
+    canonical: "/",
+    languages: {
+      en: "/",
+      es: "/",
+      fr: "/",
+      de: "/",
+    },
+  },
   openGraph: {
     title: "ROTELU — Engineering Steel Solutions",
     description:
       "More than 35 years manufacturing critical welded structures for hydroelectric, offshore wind, naval and industrial clients worldwide.",
     locale: "en_US",
     type: "website",
+    siteName: "ROTELU",
+    url: baseUrl,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ROTELU — Engineering Steel Solutions",
+    description:
+      "Heavy steel fabrication, certified welding, hydroelectric & offshore wind components since 1988.",
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 
@@ -53,7 +77,18 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
-        <link rel="canonical" href="https://rotelu-web.vercel.app" />
+        <link rel="canonical" href={baseUrl} />
+        <link rel="alternate" hrefLang="en" href={baseUrl} />
+        <link rel="alternate" hrefLang="es" href={baseUrl} />
+        <link rel="alternate" hrefLang="fr" href={baseUrl} />
+        <link rel="alternate" hrefLang="de" href={baseUrl} />
+        <link rel="alternate" hrefLang="x-default" href={baseUrl} />
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="preconnect" href="https://rotelu.es" />
+        <link rel="preconnect" href="https://images.unsplash.com" />
+        <link rel="preconnect" href="https://img.freepik.com" />
+        <link rel="dns-prefetch" href="https://rotelu.es" />
+        <link rel="dns-prefetch" href="https://images.unsplash.com" />
       </head>
       <body className="min-h-full flex flex-col">
         <ThemeProvider>

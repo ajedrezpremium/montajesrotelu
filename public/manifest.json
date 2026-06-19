@@ -1,0 +1,21 @@
+{
+  "name": "ROTELU — Engineering Steel Solutions",
+  "short_name": "ROTELU",
+  "description": "Heavy steel fabrication, certified welding, hydroelectric & offshore wind components since 1988.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a1628",
+  "theme_color": "#e94560",
+  "icons": [
+    {
+      "src": "https://rotelu.es/wp-content/uploads/2018/11/cropped-Anagrama-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://rotelu.es/wp-content/uploads/2018/11/cropped-Anagrama-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
