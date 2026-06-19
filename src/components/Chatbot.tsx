@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, X, Send, Bot, User } from "lucide-react";
+import { MessageCircle, X, Send, Bot, User, Loader2 } from "lucide-react";
 import { findResponse, suggestedQuestions } from "@/lib/knowledge-base";
 
 interface Message {
@@ -10,16 +10,32 @@ interface Message {
   content: string;
 }
 
-const initialBotMessage: Message = {
-  role: "bot",
-  content:
-    "¡Hola! Soy el **Asistente de Ingeniería de ROTELU**. Un ingeniero senior con más de 35 años de experiencia en estructuras metálicas, calderería pesada y soldadura certificada.\n\nEstoy aquí para asesorarle técnicamente. Puede preguntarme sobre:\n\n• **Soldadura certificada** (EN 1090, ISO 3834)\n• **Componentes hidroeléctricos**\n• **Estructuras offshore**\n• **Fabricación naval**\n• **Equipos a presión**\n• **Materiales y procesos**\n• **Presupuestos y proyectos**\n\n¿En qué puedo ayudarle?",
-};
+function renderMarkdown(text: string) {
+  return text
+    .split(/\n{2,}/)
+    .map((block) => block.trim())
+    .filter(Boolean)
+    .map((block) => {
+      if (block.startsWith("•") || block.startsWith("-")) {
+        const items = block.split("\n").filter((l) => l.startsWith("•") || l.startsWith("-"));
+        return items.map((item) => item.replace(/^[•-]\s*/, "")).join("\n• ");
+      }
+      return block;
+    })
+    .join("\n\n");
+}
 
 export default function Chatbot() {
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([initialBotMessage]);
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      role: "bot",
+      content:
+        "¡Hola! Soy el **Asistente de Ingeniería de ROTELU** — ingeniero senior experto mundial en soldadura de alto nivel y estructuras metálicas.\n\nPuedo asesorarle técnicamente sobre:\n\n• **Soldadura certificada** (EN 1090, ISO 3834-2, ASME, PED)\n• **Procesos de soldadura** (SAW, MIG/MAG, TIG, electrodo)\n• **Materiales** (aceros al carbono, inoxidables, offshore, alta resistencia)\n• **Componentes hidroeléctricos, offshore, navales y equipos a presión**\n• **Certificaciones, WPS/PQR, ensayos no destructivos (END)**\n\n¿En qué puedo ayudarle?",
+    },
+  ]);
   const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(true);
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -34,32 +50,67 @@ export default function Chatbot() {
     }
   }, [open]);
 
-  const handleSend = (text?: string) => {
+  const handleSend = async (text?: string) => {
     const message = (text || input).trim();
-    if (!message) return;
+    if (!message || loading) return;
 
     setMessages((prev) => [...prev, { role: "user", content: message }]);
     setInput("");
     setShowSuggestions(false);
+    setLoading(true);
 
-    setTimeout(() => {
-      const match = findResponse(message);
-      if (match) {
-        setMessages((prev) => [
-          ...prev,
-          { role: "bot", content: match.response },
-        ]);
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: [
+            ...messages.slice(1).map((m) => ({
+              role: m.role === "bot" ? "assistant" : ("user" as const),
+              content: m.content,
+            })),
+            { role: "user" as const, content: message },
+          ],
+        }),
+      });
+
+      if (!res.ok) throw new Error("API error");
+
+      const reader = res.body?.getReader();
+      if (!reader) throw new Error("No reader");
+
+      setMessages((prev) => [...prev, { role: "bot", content: "" }]);
+
+      const decoder = new TextDecoder();
+      let botContent = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        botContent += decoder.decode(value, { stream: true });
+        setMessages((prev) => {
+          const updated = [...prev];
+          updated[updated.length - 1] = { role: "bot", content: botContent };
+          return updated;
+        });
+      }
+    } catch {
+      const fallback = findResponse(message);
+      if (fallback) {
+        setMessages((prev) => [...prev, { role: "bot", content: fallback.response }]);
       } else {
         setMessages((prev) => [
           ...prev,
           {
             role: "bot",
             content:
-              "Gracias por su consulta. Para proporcionarle una respuesta técnica precisa, ¿podría darme más detalles? Por ejemplo: sector del proyecto, tipo de componente, dimensiones aproximadas, materiales requeridos, o cualquier especificación técnica que tenga.\n\nTambién puede contactar directamente a nuestro equipo de ingeniería a través del formulario de contacto para una atención personalizada.",
+              "Gracias por su consulta. Por el momento no puedo conectar con el motor de IA. ¿Podría darme más detalles técnicos? O puede contactar directamente a nuestro equipo de ingeniería a través del formulario de contacto.",
           },
         ]);
       }
-    }, 600);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -102,17 +153,22 @@ export default function Chatbot() {
                     ROTELU Engineering Assistant
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 bg-green-500 rounded-full" />
-                    <span className="text-green-500/80 text-xs">Online</span>
+                    <span className={`w-1.5 h-1.5 rounded-full ${loading ? "bg-yellow-500 animate-pulse" : "bg-green-500"}`} />
+                    <span className={`text-xs ${loading ? "text-yellow-500/80" : "text-green-500/80"}`}>
+                      {loading ? "Pensando..." : "Online"}
+                    </span>
                   </div>
                 </div>
               </div>
-              <button
-                onClick={() => setOpen(false)}
-                className="text-zinc-500 hover:text-white transition-colors"
-              >
-                <X size={18} />
-              </button>
+              <div className="flex items-center gap-1">
+                {loading && <Loader2 size={14} className="text-orange animate-spin" />}
+                <button
+                  onClick={() => setOpen(false)}
+                  className="text-zinc-500 hover:text-white transition-colors"
+                >
+                  <X size={18} />
+                </button>
+              </div>
             </div>
 
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
@@ -125,9 +181,7 @@ export default function Chatbot() {
                 >
                   <div
                     className={`flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center ${
-                      msg.role === "user"
-                        ? "bg-orange"
-                        : "bg-zinc-800"
+                      msg.role === "user" ? "bg-orange" : "bg-zinc-800"
                     }`}
                   >
                     {msg.role === "user" ? (
@@ -137,23 +191,18 @@ export default function Chatbot() {
                     )}
                   </div>
                   <div
-                    className={`max-w-[85%] px-3.5 py-2.5 rounded-lg text-sm leading-relaxed ${
+                    className={`max-w-[85%] px-3.5 py-2.5 rounded-lg text-sm leading-relaxed whitespace-pre-wrap ${
                       msg.role === "user"
                         ? "bg-orange text-white"
                         : "bg-zinc-800/80 text-zinc-300"
                     }`}
                   >
-                    {msg.content.split("\n").map((line, j) => (
-                      <span key={j}>
-                        {line}
-                        {j < msg.content.split("\n").length - 1 && <br />}
-                      </span>
-                    ))}
+                    {msg.content}
                   </div>
                 </div>
               ))}
 
-              {showSuggestions && (
+              {showSuggestions && messages.length === 1 && (
                 <div className="pt-2">
                   <p className="text-zinc-600 text-xs mb-2">
                     Preguntas frecuentes:
@@ -163,7 +212,8 @@ export default function Chatbot() {
                       <button
                         key={i}
                         onClick={() => handleSend(q)}
-                        className="block w-full text-left px-3 py-2 bg-zinc-800/50 hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200 text-xs rounded-sm transition-colors"
+                        disabled={loading}
+                        className="block w-full text-left px-3 py-2 bg-zinc-800/50 hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200 text-xs rounded-sm transition-colors disabled:opacity-50"
                       >
                         {q}
                       </button>
@@ -184,18 +234,23 @@ export default function Chatbot() {
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder="Escriba su consulta técnica..."
-                  className="flex-1 px-3.5 py-2.5 bg-black/50 border border-zinc-800 rounded-sm text-white text-sm placeholder-zinc-600 focus:border-orange/50 outline-none transition-colors"
+                  disabled={loading}
+                  className="flex-1 px-3.5 py-2.5 bg-black/50 border border-zinc-800 rounded-sm text-white text-sm placeholder-zinc-600 focus:border-orange/50 outline-none transition-colors disabled:opacity-50"
                 />
                 <button
                   onClick={() => handleSend()}
-                  disabled={!input.trim()}
+                  disabled={!input.trim() || loading}
                   className="px-3.5 py-2.5 bg-orange text-white rounded-sm hover:bg-orange-hover disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                 >
-                  <Send size={16} />
+                  {loading ? (
+                    <Loader2 size={16} className="animate-spin" />
+                  ) : (
+                    <Send size={16} />
+                  )}
                 </button>
               </div>
               <p className="text-zinc-700 text-[10px] mt-1.5 text-center">
-                Asistente técnico de ROTELU — Ingeniería de estructuras metálicas
+                Ingeniero senior — Soldadura de alto nivel & estructuras metálicas
               </p>
             </div>
           </motion.div>
