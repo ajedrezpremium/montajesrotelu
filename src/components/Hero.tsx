@@ -85,7 +85,7 @@ export default function Hero() {
           alt=""
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-steel/75 mix-blend-multiply" />
+        <div className="absolute inset-0 bg-black/70" />
       </div>
       <canvas
         ref={canvasRef}
@@ -132,7 +132,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
-          className="mt-6 text-lg sm:text-xl text-zinc-400 max-w-3xl mx-auto leading-relaxed"
+          className="mt-6 text-lg sm:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed"
         >
           {t("hero.subtitle")}
         </motion.p>
@@ -161,12 +161,12 @@ export default function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 1.2 }}
-          className="mt-16 flex items-center justify-center gap-8 text-zinc-600 text-xs uppercase tracking-widest"
+          className="mt-16 flex items-center justify-center gap-8 text-zinc-400 text-xs uppercase tracking-widest"
         >
           <span>{t("hero.cert1")}</span>
-          <span className="w-px h-4 bg-zinc-700" />
+          <span className="w-px h-4 bg-zinc-600" />
           <span>{t("hero.cert2")}</span>
-          <span className="w-px h-4 bg-zinc-700" />
+          <span className="w-px h-4 bg-zinc-600" />
           <span>{t("hero.cert3")}</span>
         </motion.div>
       </div>
@@ -178,7 +178,7 @@ export default function Hero() {
         className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
       >
         <div className="flex flex-col items-center gap-2">
-          <span className="text-zinc-600 text-xs uppercase tracking-widest">
+          <span className="text-zinc-400 text-xs uppercase tracking-widest">
             {t("common.scroll")}
           </span>
           <div className="w-px h-8 bg-gradient-to-b from-orange/50 to-transparent" />

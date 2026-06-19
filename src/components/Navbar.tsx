@@ -41,15 +41,17 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
-          <a href="#hero" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 bg-orange rounded-sm flex items-center justify-center font-bold text-white text-sm">
-              R
+          <a href="#hero" className="flex flex-col items-center group">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-orange rounded-sm flex items-center justify-center font-bold text-white text-sm">
+                R
+              </div>
+              <span className="text-lg font-bold tracking-tight text-white">
+                ROTELU
+              </span>
             </div>
-            <span className="text-lg font-bold tracking-tight text-white">
-              ROTELU
-            </span>
-            <span className="hidden sm:block text-[10px] text-zinc-500 font-light leading-tight">
-              steel &amp; engineering<br />since 1988
+            <span className="hidden sm:block text-[9px] text-white/70 font-light tracking-wider -mt-0.5">
+              steel &amp; engineering since 1988
             </span>
           </a>
 
