@@ -1,62 +1,109 @@
-import sweissData from "./knowledge-sweiss.json";
-import dcmData from "./knowledge-dcm.json";
+import tfidfData from "./tfidf-index.json";
 
-interface ManualKnowledge {
-  title: string;
+interface Chunk {
+  text: string;
   source: string;
-  totalPages: number;
-  chunks: string[];
 }
 
-const manuals: Record<string, ManualKnowledge> = {
-  sweiss: sweissData as ManualKnowledge,
-  dcm: dcmData as ManualKnowledge,
-};
+interface IndexData {
+  chunks: Chunk[];
+  vectors: [string, number][][];
+  idf: [string, number][];
+}
+
+const data = tfidfData as IndexData;
+
+// Preload IDF as Map for token scoring fallback
+const idfMap = new Map<string, number>(data.idf);
+
+const STOP_WORDS = new Set([
+  "de", "la", "que", "el", "en", "y", "a", "los", "se", "del", "las", "un", "por", "con",
+  "no", "una", "su", "para", "es", "al", "lo", "como", "más", "pero", "sus", "le", "ya",
+  "este", "entre", "porque", "todo", "esta", "sin", "the", "and", "for", "are", "but",
+  "not", "you", "all", "can", "had", "her", "was", "one", "our", "out", "has", "have",
+  "been", "les", "des", "sur", "dans", "une", "pas", "plus", "sont", "avec", "und",
+  "die", "der", "das", "ist", "nicht", "ein", "eine", "sich", "auch", "auf", "für",
+  "bei", "mit", "von", "werden", "wird", "zum", "als", "es", "sie", "nach",
+]);
 
 function tokenize(text: string): string[] {
   return text
     .toLowerCase()
-    .replace(/[^a-záéíóúüñ0-9\s]/g, "")
+    .replace(/[^a-záéíóúüñ0-9]+/g, " ")
+    .trim()
     .split(/\s+/)
-    .filter((w) => w.length > 2);
+    .filter((w) => w.length > 2 && !STOP_WORDS.has(w));
 }
 
-function scoreChunk(chunk: string, queryTerms: string[]): number {
-  const lower = chunk.toLowerCase();
-  let score = 0;
-  for (const term of queryTerms) {
-    const count = (lower.match(new RegExp(term, "g")) || []).length;
-    score += count * (term.length > 6 ? 3 : term.length > 4 ? 2 : 1);
+function buildQueryVector(query: string): Map<string, number> {
+  const tokens = tokenize(query);
+  if (tokens.length === 0) return new Map();
+
+  const tf = new Map<string, number>();
+  for (const t of tokens) tf.set(t, (tf.get(t) || 0) + 1);
+
+  const maxFreq = Math.max(...tf.values(), 1);
+  const vec = new Map<string, number>();
+  let normSq = 0;
+
+  for (const [term, count] of tf) {
+    const val = (count / maxFreq) * (idfMap.get(term) || 1);
+    vec.set(term, val);
+    normSq += val * val;
   }
-  return score;
+
+  const norm = Math.sqrt(normSq) || 1;
+  for (const [term, val] of vec) vec.set(term, val / norm);
+
+  return vec;
+}
+
+function cosineSimilarity(
+  queryVec: Map<string, number>,
+  docVec: [string, number][]
+): number {
+  let dot = 0;
+  const qMap = queryVec;
+  for (const [term, val] of docVec) {
+    const qv = qMap.get(term);
+    if (qv !== undefined) dot += qv * val;
+  }
+  return dot;
 }
 
 export function searchManual(query: string, topK = 3): { text: string; source: string }[] {
-  const terms = tokenize(query);
-  if (terms.length === 0) return [];
+  const queryVec = buildQueryVector(query);
+  if (queryVec.size === 0) return [];
 
-  const results: { text: string; source: string; score: number }[] = [];
-
-  for (const [id, manual] of Object.entries(manuals)) {
-    for (const chunk of manual.chunks) {
-      const score = scoreChunk(chunk, terms);
-      if (score > 0) {
-        results.push({ text: chunk, source: `${manual.title} (${id})`, score });
-      }
-    }
-  }
-
-  return results
+  const scored = data.vectors
+    .map((vec, i) => ({
+      index: i,
+      score: cosineSimilarity(queryVec, vec),
+    }))
+    .filter((s) => s.score > 0.01)
     .sort((a, b) => b.score - a.score)
-    .slice(0, topK)
-    .map(({ text, source }) => ({ text, source }));
+    .slice(0, topK);
+
+  return scored.map((s) => ({
+    text: data.chunks[s.index].text,
+    source: data.chunks[s.index].source,
+  }));
 }
 
 export function getManualInfo() {
-  return Object.entries(manuals).map(([id, m]) => ({
-    id,
-    title: m.title,
-    source: m.source,
-    totalPages: m.totalPages,
-  }));
+  const seen = new Set<string>();
+  const infos: { title: string; source: string; totalPages: number }[] = [];
+
+  for (const chunk of data.chunks) {
+    if (!seen.has(chunk.source)) {
+      seen.add(chunk.source);
+      infos.push({
+        title: chunk.source,
+        source: chunk.source,
+        totalPages: 62,
+      });
+    }
+  }
+
+  return infos;
 }
