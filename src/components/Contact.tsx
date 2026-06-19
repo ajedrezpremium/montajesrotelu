@@ -2,16 +2,18 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Send, Check } from "lucide-react";
+import { Send, Check, AlertCircle } from "lucide-react";
 import { useLang } from "@/lib/language";
-import { submitContact } from "@/lib/supabase";
 
 export default function Contact() {
   const { t } = useLang();
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [form, setForm] = useState({
     name: "",
+    email: "",
+    phone: "",
     company: "",
     country: "",
     sector: "",
@@ -22,25 +24,30 @@ export default function Contact() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
     if (form.description.length < 10) return;
     setLoading(true);
 
     try {
-      await submitContact({
-        name: form.name,
-        company: form.company,
-        country: form.country,
-        sector: form.sector,
-        description: form.description,
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
       });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Error");
+      }
+
+      setForm({ name: "", email: "", phone: "", company: "", country: "", sector: "", description: "" });
+      setSent(true);
+      setTimeout(() => setSent(false), 4000);
     } catch {
-      // Silently continue even if Supabase is not configured
+      setError(t("contact.form.error"));
     }
 
     setLoading(false);
-    setSent(true);
-    setForm({ name: "", company: "", country: "", sector: "", description: "" });
-    setTimeout(() => setSent(false), 4000);
   };
 
   return (
@@ -103,6 +110,34 @@ export default function Contact() {
             <div className="grid sm:grid-cols-2 gap-5">
               <div>
                 <label className="block text-zinc-400 text-xs uppercase tracking-wider mb-2">
+                  {t("contact.form.email")} *
+                </label>
+                <input
+                  type="email"
+                  required
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  className="w-full px-4 py-3 bg-black/50 border border-zinc-800 rounded-sm text-white text-sm focus:border-orange/50 outline-none transition-colors"
+                  placeholder={t("contact.form.email")}
+                />
+              </div>
+              <div>
+                <label className="block text-zinc-400 text-xs uppercase tracking-wider mb-2">
+                  {t("contact.form.phone")}
+                </label>
+                <input
+                  type="tel"
+                  value={form.phone}
+                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                  className="w-full px-4 py-3 bg-black/50 border border-zinc-800 rounded-sm text-white text-sm focus:border-orange/50 outline-none transition-colors"
+                  placeholder={t("contact.form.phone")}
+                />
+              </div>
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-5">
+              <div>
+                <label className="block text-zinc-400 text-xs uppercase tracking-wider mb-2">
                   {t("contact.form.country")}
                 </label>
                 <input
@@ -147,6 +182,13 @@ export default function Contact() {
                 placeholder={t("contact.form.description")}
               />
             </div>
+
+            {error && (
+              <div className="flex items-start gap-2 p-3 bg-red-900/20 border border-red-900/30 rounded-sm">
+                <AlertCircle size={14} className="text-red-400 shrink-0 mt-0.5" />
+                <p className="text-xs text-red-300 leading-relaxed">{error}</p>
+              </div>
+            )}
 
             <button
               type="submit"
