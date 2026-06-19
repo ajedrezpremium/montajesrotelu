@@ -2,31 +2,18 @@
 
 import { motion } from "framer-motion";
 import { ShieldCheck, FileCheck, Leaf, HardHat } from "lucide-react";
+import { useLang } from "@/lib/language";
 
 const certs = [
-  {
-    icon: ShieldCheck,
-    title: "EN 1090 EXC1 / EXC2 / EXC3",
-    desc: "Execution classes for steel structures — from simple to most demanding structural applications.",
-  },
-  {
-    icon: FileCheck,
-    title: "ISO 3834-2",
-    desc: "Complete quality requirements for fusion welding of metallic materials — highest level.",
-  },
-  {
-    icon: Leaf,
-    title: "Environmental Management",
-    desc: "Committed to sustainable manufacturing processes and environmental responsibility.",
-  },
-  {
-    icon: HardHat,
-    title: "Occupational Health & Safety",
-    desc: "Safety-first culture with certified OHS management systems and continuous training.",
-  },
+  { icon: ShieldCheck, titleKey: "cert.item1.title", descKey: "cert.item1.desc" },
+  { icon: FileCheck, titleKey: "cert.item2.title", descKey: "cert.item2.desc" },
+  { icon: Leaf, titleKey: "cert.item3.title", descKey: "cert.item3.desc" },
+  { icon: HardHat, titleKey: "cert.item4.title", descKey: "cert.item4.desc" },
 ];
 
 export default function Certifications() {
+  const { t } = useLang();
+
   return (
     <section id="certifications" className="relative py-24 sm:py-32 bg-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
@@ -38,14 +25,13 @@ export default function Certifications() {
           className="text-center mb-16"
         >
           <span className="text-orange text-xs uppercase tracking-[0.2em] font-medium">
-            Certifications
+            {t("cert.tag")}
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3">
-            Certified quality. Proven reliability.
+            {t("cert.title")}
           </h2>
           <p className="mt-4 text-zinc-500 max-w-2xl mx-auto">
-            Our certifications are not just documents — they are the foundation
-            of trust our clients place in us.
+            {t("cert.subtitle")}
           </p>
         </motion.div>
 
@@ -65,10 +51,10 @@ export default function Certifications() {
                   <Icon className="text-orange" size={28} />
                 </div>
                 <h3 className="text-sm font-bold text-white mb-3 uppercase tracking-wider">
-                  {cert.title}
+                  {t(cert.titleKey)}
                 </h3>
                 <p className="text-zinc-500 text-xs leading-relaxed">
-                  {cert.desc}
+                  {t(cert.descKey)}
                 </p>
               </motion.div>
             );

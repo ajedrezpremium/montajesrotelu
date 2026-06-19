@@ -1,19 +1,22 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useLang } from "@/lib/language";
 
 const steps = [
-  { num: "01", title: "Engineering Review", desc: "Detailed analysis of specifications, drawings and technical requirements." },
-  { num: "02", title: "Material Selection", desc: "Certified materials with full traceability from approved mills and suppliers." },
-  { num: "03", title: "Cutting & Forming", desc: "CNC plasma cutting, bending, rolling and forming of plates and profiles." },
-  { num: "04", title: "Certified Welding", desc: "Qualified welders and WPS procedures under ISO 3834-2 standards." },
-  { num: "05", title: "Non-Destructive Testing", desc: "UT, MT, PT, RT inspection of all critical welds by certified personnel." },
-  { num: "06", title: "Surface Treatment", desc: "Shot blasting, painting, galvanizing and special coating systems." },
-  { num: "07", title: "Final Inspection", desc: "Dimensional, pressure and functional testing with full documentation." },
-  { num: "08", title: "Delivery", desc: "Safe transport and logistics coordination for national and international projects." },
+  { num: "01", key: "step1" },
+  { num: "02", key: "step2" },
+  { num: "03", key: "step3" },
+  { num: "04", key: "step4" },
+  { num: "05", key: "step5" },
+  { num: "06", key: "step6" },
+  { num: "07", key: "step7" },
+  { num: "08", key: "step8" },
 ];
 
 export default function Process() {
+  const { t } = useLang();
+
   return (
     <section id="process" className="relative py-24 sm:py-32 bg-steel">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
@@ -25,13 +28,13 @@ export default function Process() {
           className="text-center mb-16"
         >
           <span className="text-orange text-xs uppercase tracking-[0.2em] font-medium">
-            Manufacturing Process
+            {t("process.tag")}
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3">
-            How we deliver precision
+            {t("process.title")}
           </h2>
           <p className="mt-4 text-zinc-500 max-w-2xl mx-auto">
-            Every project follows our proven 8-step manufacturing process to ensure quality, traceability and on-time delivery.
+            {t("process.subtitle")}
           </p>
         </motion.div>
 
@@ -60,9 +63,9 @@ export default function Process() {
                       {step.num}
                     </span>
                     <h3 className="text-lg font-bold text-white mt-1">
-                      {step.title}
+                      {t(`process.${step.key}.title`)}
                     </h3>
-                    <p className="text-zinc-500 text-sm mt-2">{step.desc}</p>
+                    <p className="text-zinc-500 text-sm mt-2">{t(`process.${step.key}.desc`)}</p>
                   </div>
                 </div>
 
@@ -76,8 +79,8 @@ export default function Process() {
                   <span className="text-orange/30 text-xs font-mono">
                     {step.num}
                   </span>
-                  <h3 className="text-base font-bold text-white">{step.title}</h3>
-                  <p className="text-zinc-500 text-xs mt-1">{step.desc}</p>
+                  <h3 className="text-base font-bold text-white">{t(`process.${step.key}.title`)}</h3>
+                  <p className="text-zinc-500 text-xs mt-1">{t(`process.${step.key}.desc`)}</p>
                 </div>
 
                 <div className="hidden sm:flex sm:w-1/2" />

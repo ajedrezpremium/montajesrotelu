@@ -5,6 +5,7 @@ import Projects from "@/components/Projects";
 import Clients from "@/components/Clients";
 import Capabilities from "@/components/Capabilities";
 import Process from "@/components/Process";
+import Library from "@/components/Library";
 import Certifications from "@/components/Certifications";
 import Facilities from "@/components/Facilities";
 import Team from "@/components/Team";
@@ -22,6 +23,7 @@ export default function Home() {
         <Clients />
         <Capabilities />
         <Process />
+        <Library />
         <Certifications />
         <Facilities />
         <Team />

@@ -1,6 +1,9 @@
 "use client";
 
+import { useLang } from "@/lib/language";
+
 export default function Footer() {
+  const { t } = useLang();
   const year = new Date().getFullYear();
 
   return (
@@ -15,14 +18,13 @@ export default function Footer() {
               <span className="font-bold text-white">ROTELU</span>
             </div>
             <p className="text-zinc-600 text-xs leading-relaxed">
-              Engineering steel solutions for the industries that move the world.
-              More than 35 years of excellence in heavy steel fabrication.
+              {t("footer.description")}
             </p>
           </div>
 
           <div>
             <h4 className="text-white text-xs uppercase tracking-wider font-bold mb-4">
-              Solutions
+              {t("footer.solutions")}
             </h4>
             <ul className="space-y-2">
               {[
@@ -45,16 +47,16 @@ export default function Footer() {
 
           <div>
             <h4 className="text-white text-xs uppercase tracking-wider font-bold mb-4">
-              Company
+              {t("footer.company")}
             </h4>
             <ul className="space-y-2">
               {[
-                { label: "Projects", href: "#projects" },
-                { label: "Certifications", href: "#certifications" },
-                { label: "Facilities", href: "#facilities" },
-                { label: "Contact", href: "#contact" },
+                { label: t("nav.projects"), href: "#projects" },
+                { label: t("nav.certifications"), href: "#certifications" },
+                { label: t("fac.tag"), href: "#facilities" },
+                { label: t("nav.contact"), href: "#contact" },
               ].map((item) => (
-                <li key={item.label}>
+                <li key={item.href}>
                   <a
                     href={item.href}
                     className="text-zinc-600 hover:text-zinc-400 text-xs transition-colors"
@@ -68,7 +70,7 @@ export default function Footer() {
 
           <div>
             <h4 className="text-white text-xs uppercase tracking-wider font-bold mb-4">
-              Contact
+              {t("footer.contact")}
             </h4>
             <ul className="space-y-2 text-zinc-600 text-xs">
               <li>Pontevedra, Spain</li>
@@ -80,12 +82,12 @@ export default function Footer() {
 
         <div className="mt-12 pt-8 border-t border-zinc-900 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-zinc-700 text-xs">
-            &copy; {year} ROTELU. All rights reserved.
+            {t("footer.copyright").replace("{year}", String(year))}
           </p>
           <div className="flex items-center gap-4 text-zinc-700 text-xs">
-            <span>EN 1090 EXC3</span>
-            <span>ISO 3834-2</span>
-            <span>PED 2014/68/EU</span>
+            <span>{t("hero.cert1")}</span>
+            <span>{t("hero.cert2")}</span>
+            <span>{t("hero.cert3")}</span>
           </div>
         </div>
       </div>

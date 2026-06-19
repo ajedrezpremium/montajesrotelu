@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
+import { useLang } from "@/lib/language";
 
 function Counter({ end, suffix = "", label }: { end: number; suffix?: string; label: string }) {
   const [count, setCount] = useState(0);
@@ -37,6 +38,8 @@ function Counter({ end, suffix = "", label }: { end: number; suffix?: string; la
 }
 
 export default function Stats() {
+  const { t } = useLang();
+
   return (
     <section className="relative py-20 sm:py-28 bg-steel border-y border-zinc-800/50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
@@ -48,19 +51,19 @@ export default function Stats() {
           className="text-center mb-16"
         >
           <span className="text-orange text-xs uppercase tracking-[0.2em] font-medium">
-            The numbers that speak
+            {t("stats.tag")}
           </span>
           <h2 className="text-3xl sm:text-4xl font-bold text-white mt-3">
-            Una trayectoria forjada en acero
+            {t("stats.title")}
           </h2>
         </motion.div>
 
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 md:gap-12">
-          <Counter end={35} suffix="+" label="Years of Experience" />
-          <Counter end={1988} label="Established" />
-          <Counter end={100} suffix="%" label="Quality Commitment" />
-          <Counter end={120} suffix="+" label="Major Projects" />
-          <Counter end={15} suffix="+" label="International Clients" />
+          <Counter end={35} suffix="+" label={t("stats.years")} />
+          <Counter end={1988} label={t("stats.established")} />
+          <Counter end={100} suffix="%" label={t("stats.quality")} />
+          <Counter end={120} suffix="+" label={t("stats.projects")} />
+          <Counter end={15} suffix="+" label={t("stats.clients")} />
         </div>
       </div>
     </section>

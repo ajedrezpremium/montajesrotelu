@@ -2,8 +2,10 @@
 
 import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
+import { useLang } from "@/lib/language";
 
 export default function Hero() {
+  const { t } = useLang();
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -82,6 +84,12 @@ export default function Hero() {
         ref={canvasRef}
         className="absolute inset-0 z-[1] opacity-60"
       />
+      <img
+        src="https://rotelu.es/wp-content/uploads/2018/11/Anagrama.png"
+        alt="ROTELU"
+        className="absolute z-[2] opacity-[0.04] w-[60vw] sm:w-[40vw] object-contain pointer-events-none"
+        style={{ top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}
+      />
       <div className="absolute inset-0 z-[2]">
         <div
           className="absolute inset-0"
@@ -107,7 +115,7 @@ export default function Hero() {
         >
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-700/50 text-xs text-zinc-400 tracking-wider uppercase mb-8">
             <span className="w-2 h-2 bg-orange rounded-full animate-pulse" />
-            Más de 35 años de excelencia en ingeniería
+            {t("hero.badge")}
           </div>
         </motion.div>
 
@@ -117,10 +125,10 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
           className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-tight"
         >
-          <span className="text-white">Engineering steel solutions</span>
+          <span className="text-white">{t("hero.title1")}</span>
           <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange to-orange/70">
-            for the industries that move the world.
+            {t("hero.title2")}
           </span>
         </motion.h1>
 
@@ -130,8 +138,7 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
           className="mt-6 text-lg sm:text-xl text-zinc-400 max-w-3xl mx-auto leading-relaxed"
         >
-          More than 35 years manufacturing critical welded structures for
-          hydroelectric, offshore wind, naval and industrial clients worldwide.
+          {t("hero.subtitle")}
         </motion.p>
 
         <motion.div
@@ -144,13 +151,13 @@ export default function Hero() {
             href="#projects"
             className="group relative inline-flex items-center gap-2 px-8 py-3.5 bg-orange text-white font-medium rounded-sm overflow-hidden transition-all duration-300 hover:bg-orange-hover"
           >
-            <span className="relative z-10">Explore our projects</span>
+            <span className="relative z-10">{t("hero.btn1")}</span>
           </a>
           <a
             href="#contact"
             className="group inline-flex items-center gap-2 px-8 py-3.5 border border-zinc-600 text-zinc-300 font-medium rounded-sm hover:border-orange hover:text-orange transition-all duration-300"
           >
-            Contact our engineering team
+            {t("hero.btn2")}
           </a>
         </motion.div>
 
@@ -160,11 +167,11 @@ export default function Hero() {
           transition={{ duration: 1, delay: 1.2 }}
           className="mt-16 flex items-center justify-center gap-8 text-zinc-600 text-xs uppercase tracking-widest"
         >
-          <span>EN 1090 EXC3</span>
+          <span>{t("hero.cert1")}</span>
           <span className="w-px h-4 bg-zinc-700" />
-          <span>ISO 3834-2</span>
+          <span>{t("hero.cert2")}</span>
           <span className="w-px h-4 bg-zinc-700" />
-          <span>PED 2014/68/EU</span>
+          <span>{t("hero.cert3")}</span>
         </motion.div>
       </div>
 
@@ -176,7 +183,7 @@ export default function Hero() {
       >
         <div className="flex flex-col items-center gap-2">
           <span className="text-zinc-600 text-xs uppercase tracking-widest">
-            Scroll
+            {t("common.scroll")}
           </span>
           <div className="w-px h-8 bg-gradient-to-b from-orange/50 to-transparent" />
         </div>

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/lib/theme";
+import { LanguageProvider } from "@/lib/language";
 import Chatbot from "@/components/Chatbot";
 
 const geistSans = Geist({
@@ -16,12 +18,12 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "ROTELU | Engineering Steel Solutions — Heavy Steel Fabrication & Certified Welding",
   description:
-    "ROTELU es una empresa española con más de 35 años de experiencia en calderería pesada, construcciones soldadas, estructuras metálicas complejas y componentes críticos para hidroeléctrica, eólica offshore y construcción naval. Certificada EN 1090 EXC3 e ISO 3834-2.",
+    "ROTELU is a Spanish company with over 35 years of experience in heavy steel fabrication, welded constructions, complex metal structures and critical components for hydroelectric, offshore wind and shipbuilding industries. Certified EN 1090 EXC3 and ISO 3834-2.",
   keywords: [
     "heavy steel fabrication",
     "offshore wind structures",
     "hydroelectric steel components",
-    "pressure vessel manufacturer",
+    "pressure vessel manufacturer Europe",
     "certified welding company",
     "EN 1090 EXC3",
     "ISO 3834-2",
@@ -35,7 +37,7 @@ export const metadata: Metadata = {
     title: "ROTELU — Engineering Steel Solutions",
     description:
       "More than 35 years manufacturing critical welded structures for hydroelectric, offshore wind, naval and industrial clients worldwide.",
-    locale: "es_ES",
+    locale: "en_US",
     type: "website",
   },
 };
@@ -47,15 +49,19 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="es"
+      lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
-        <link rel="canonical" href="https://rotelu.es" />
+        <link rel="canonical" href="https://rotelu-web.vercel.app" />
       </head>
-      <body className="min-h-full flex flex-col bg-[#0a0a0a] text-[#f5f5f5]">
-        {children}
-        <Chatbot />
+      <body className="min-h-full flex flex-col">
+        <ThemeProvider>
+          <LanguageProvider>
+            {children}
+            <Chatbot />
+          </LanguageProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

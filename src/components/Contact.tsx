@@ -3,9 +3,11 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Send, Check } from "lucide-react";
+import { useLang } from "@/lib/language";
 import { submitContact } from "@/lib/supabase";
 
 export default function Contact() {
+  const { t } = useLang();
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
@@ -15,6 +17,8 @@ export default function Contact() {
     sector: "",
     description: "",
   });
+
+  const sectorOptions = String(t("contact.form.sector.options")).split(",");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,14 +54,13 @@ export default function Contact() {
           className="text-center mb-16"
         >
           <span className="text-orange text-xs uppercase tracking-[0.2em] font-medium">
-            Contact
+            {t("contact.tag")}
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3">
-            Let&apos;s build your next industrial challenge
+            {t("contact.title")}
           </h2>
           <p className="mt-4 text-zinc-500 max-w-2xl mx-auto">
-            Tell us about your project requirements and our engineering team will
-            get back to you with a tailored solution.
+            {t("contact.subtitle")}
           </p>
         </motion.div>
 
@@ -72,7 +75,7 @@ export default function Contact() {
             <div className="grid sm:grid-cols-2 gap-5">
               <div>
                 <label className="block text-zinc-400 text-xs uppercase tracking-wider mb-2">
-                  Name *
+                  {t("contact.form.name")} *
                 </label>
                 <input
                   type="text"
@@ -80,19 +83,19 @@ export default function Contact() {
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
                   className="w-full px-4 py-3 bg-black/50 border border-zinc-800 rounded-sm text-white text-sm focus:border-orange/50 outline-none transition-colors"
-                  placeholder="Your full name"
+                  placeholder={t("contact.form.name")}
                 />
               </div>
               <div>
                 <label className="block text-zinc-400 text-xs uppercase tracking-wider mb-2">
-                  Company
+                  {t("contact.form.company")}
                 </label>
                 <input
                   type="text"
                   value={form.company}
                   onChange={(e) => setForm({ ...form, company: e.target.value })}
                   className="w-full px-4 py-3 bg-black/50 border border-zinc-800 rounded-sm text-white text-sm focus:border-orange/50 outline-none transition-colors"
-                  placeholder="Company name"
+                  placeholder={t("contact.form.company")}
                 />
               </div>
             </div>
@@ -100,38 +103,38 @@ export default function Contact() {
             <div className="grid sm:grid-cols-2 gap-5">
               <div>
                 <label className="block text-zinc-400 text-xs uppercase tracking-wider mb-2">
-                  Country
+                  {t("contact.form.country")}
                 </label>
                 <input
                   type="text"
                   value={form.country}
                   onChange={(e) => setForm({ ...form, country: e.target.value })}
                   className="w-full px-4 py-3 bg-black/50 border border-zinc-800 rounded-sm text-white text-sm focus:border-orange/50 outline-none transition-colors"
-                  placeholder="Country"
+                  placeholder={t("contact.form.country")}
                 />
               </div>
               <div>
                 <label className="block text-zinc-400 text-xs uppercase tracking-wider mb-2">
-                  Sector
+                  {t("contact.form.sector")}
                 </label>
                 <select
                   value={form.sector}
                   onChange={(e) => setForm({ ...form, sector: e.target.value })}
                   className="w-full px-4 py-3 bg-black/50 border border-zinc-800 rounded-sm text-white text-sm focus:border-orange/50 outline-none transition-colors"
                 >
-                  <option value="">Select sector</option>
-                  <option value="hydroelectric">Hydroelectric</option>
-                  <option value="offshore">Offshore Wind</option>
-                  <option value="shipbuilding">Shipbuilding & Naval</option>
-                  <option value="pressure">Pressure Equipment</option>
-                  <option value="industrial">Industrial / Other</option>
+                  <option value="">{t("contact.form.sector")}</option>
+                  {sectorOptions.map((opt, i) => (
+                    <option key={i} value={opt.trim().toLowerCase().replace(/\s+/g, "-")}>
+                      {opt.trim()}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>
 
             <div>
               <label className="block text-zinc-400 text-xs uppercase tracking-wider mb-2">
-                Project Description *
+                {t("contact.form.description")} *
               </label>
               <textarea
                 required
@@ -141,7 +144,7 @@ export default function Contact() {
                   setForm({ ...form, description: e.target.value })
                 }
                 className="w-full px-4 py-3 bg-black/50 border border-zinc-800 rounded-sm text-white text-sm focus:border-orange/50 outline-none transition-colors resize-none"
-                placeholder="Describe your project: dimensions, materials, specifications, deadlines..."
+                placeholder={t("contact.form.description")}
               />
             </div>
 
@@ -155,16 +158,16 @@ export default function Contact() {
               }`}
             >
               {loading ? (
-                <span className="animate-pulse">Sending...</span>
+                <span className="animate-pulse">{t("contact.submit")}...</span>
               ) : sent ? (
                 <>
                   <Check size={16} />
-                  Message sent successfully
+                  {t("contact.success")}
                 </>
               ) : (
                 <>
                   <Send size={16} />
-                  Send inquiry to engineering team
+                  {t("contact.submit")}
                 </>
               )}
             </button>

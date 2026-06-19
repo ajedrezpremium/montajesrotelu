@@ -1,9 +1,14 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, X, Send, Bot, User, Loader2 } from "lucide-react";
+import {
+  MessageCircle, X, Send, Bot, User, Loader2,
+  Mic, MicOff, Volume2, Copy, Share2,
+} from "lucide-react";
 import { findResponse, suggestedQuestions } from "@/lib/knowledge-base";
+import { useLang } from "@/lib/language";
+import { useTheme } from "@/lib/theme";
 
 interface Message {
   role: "user" | "bot";
@@ -26,19 +31,21 @@ function renderMarkdown(text: string) {
 }
 
 export default function Chatbot() {
+  const { t } = useLang();
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-    {
-      role: "bot",
-      content:
-        "¡Hola! Soy el **Asistente de Ingeniería de ROTELU** — ingeniero senior experto mundial en soldadura de alto nivel y estructuras metálicas.\n\nPuedo asesorarle técnicamente sobre:\n\n• **Soldadura certificada** (EN 1090, ISO 3834-2, ASME, PED)\n• **Procesos de soldadura** (SAW, MIG/MAG, TIG, electrodo)\n• **Materiales** (aceros al carbono, inoxidables, offshore, alta resistencia)\n• **Componentes hidroeléctricos, offshore, navales y equipos a presión**\n• **Certificaciones, WPS/PQR, ensayos no destructivos (END)**\n\n¿En qué puedo ayudarle?",
-    },
+    { role: "bot", content: t("chatbot.greeting") },
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(true);
+  const [listening, setListening] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const recognitionRef = useRef<any>(null);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -49,6 +56,12 @@ export default function Chatbot() {
       setTimeout(() => inputRef.current?.focus(), 300);
     }
   }, [open]);
+
+  useEffect(() => {
+    return () => {
+      recognitionRef.current?.abort();
+    };
+  }, []);
 
   const handleSend = async (text?: string) => {
     const message = (text || input).trim();
@@ -76,24 +89,8 @@ export default function Chatbot() {
 
       if (!res.ok) throw new Error("API error");
 
-      const reader = res.body?.getReader();
-      if (!reader) throw new Error("No reader");
-
-      setMessages((prev) => [...prev, { role: "bot", content: "" }]);
-
-      const decoder = new TextDecoder();
-      let botContent = "";
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        botContent += decoder.decode(value, { stream: true });
-        setMessages((prev) => {
-          const updated = [...prev];
-          updated[updated.length - 1] = { role: "bot", content: botContent };
-          return updated;
-        });
-      }
+      const content = await res.text();
+      setMessages((prev) => [...prev, { role: "bot", content }]);
     } catch {
       const fallback = findResponse(message);
       if (fallback) {
@@ -120,6 +117,65 @@ export default function Chatbot() {
     }
   };
 
+  const toggleListening = useCallback(() => {
+    if (listening) {
+      recognitionRef.current?.stop();
+      setListening(false);
+      return;
+    }
+
+    const SpeechRecognitionAPI =
+      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+
+    if (!SpeechRecognitionAPI) {
+      return;
+    }
+
+    const recognition = new SpeechRecognitionAPI();
+    recognition.lang = "es-ES";
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      setInput((prev) => prev + transcript);
+      setListening(false);
+    };
+
+    recognition.onerror = () => setListening(false);
+    recognition.onend = () => setListening(false);
+
+    recognitionRef.current = recognition;
+    recognition.start();
+    setListening(true);
+  }, [listening]);
+
+  const speak = (text: string) => {
+    if (!window.speechSynthesis) return;
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "es-ES";
+    utterance.rate = 1;
+    window.speechSynthesis.speak(utterance);
+  };
+
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      // clipboard not available
+    }
+  };
+
+  const shareContent = async (text: string) => {
+    if (navigator.share) {
+      try {
+        await navigator.share({ text });
+      } catch {
+        // user cancelled
+      }
+    }
+  };
+
   return (
     <>
       <button
@@ -141,30 +197,60 @@ export default function Chatbot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="fixed bottom-24 right-6 z-50 w-[360px] sm:w-[400px] h-[560px] bg-zinc-900 border border-zinc-800 rounded-lg shadow-2xl shadow-black/50 flex flex-col overflow-hidden"
+            className={`fixed bottom-24 right-6 z-50 w-[360px] sm:w-[400px] h-[560px] ${
+              isDark ? "bg-zinc-900 border-zinc-800" : "bg-white border-zinc-200"
+            } border rounded-lg shadow-2xl shadow-black/50 flex flex-col overflow-hidden`}
           >
-            <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-zinc-800 to-zinc-900 border-b border-zinc-800">
+            <div
+              className={`flex items-center justify-between px-4 py-3 ${
+                isDark
+                  ? "bg-gradient-to-r from-zinc-800 to-zinc-900 border-zinc-800"
+                  : "bg-gradient-to-r from-zinc-100 to-white border-zinc-200"
+              } border-b`}
+            >
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-orange/20 rounded-full flex items-center justify-center">
                   <Bot size={16} className="text-orange" />
                 </div>
                 <div>
-                  <div className="text-white text-sm font-medium">
+                  <div
+                    className={`text-sm font-medium ${
+                      isDark ? "text-white" : "text-zinc-900"
+                    }`}
+                  >
                     ROTELU Engineering Assistant
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <span className={`w-1.5 h-1.5 rounded-full ${loading ? "bg-yellow-500 animate-pulse" : "bg-green-500"}`} />
-                    <span className={`text-xs ${loading ? "text-yellow-500/80" : "text-green-500/80"}`}>
-                      {loading ? "Pensando..." : "Online"}
+                    <span
+                      className={`w-1.5 h-1.5 rounded-full ${
+                        loading
+                          ? "bg-yellow-500 animate-pulse"
+                          : "bg-green-500"
+                      }`}
+                    />
+                    <span
+                      className={`text-xs ${
+                        loading ? "text-yellow-500/80" : "text-green-500/80"
+                      }`}
+                    >
+                      {loading
+                        ? t("chatbot.status.thinking")
+                        : t("chatbot.status.online")}
                     </span>
                   </div>
                 </div>
               </div>
               <div className="flex items-center gap-1">
-                {loading && <Loader2 size={14} className="text-orange animate-spin" />}
+                {loading && (
+                  <Loader2 size={14} className="text-orange animate-spin" />
+                )}
                 <button
                   onClick={() => setOpen(false)}
-                  className="text-zinc-500 hover:text-white transition-colors"
+                  className={`transition-colors ${
+                    isDark
+                      ? "text-zinc-500 hover:text-white"
+                      : "text-zinc-400 hover:text-zinc-900"
+                  }`}
                 >
                   <X size={18} />
                 </button>
@@ -181,7 +267,11 @@ export default function Chatbot() {
                 >
                   <div
                     className={`flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center ${
-                      msg.role === "user" ? "bg-orange" : "bg-zinc-800"
+                      msg.role === "user"
+                        ? "bg-orange"
+                        : isDark
+                        ? "bg-zinc-800"
+                        : "bg-zinc-200"
                     }`}
                   >
                     {msg.role === "user" ? (
@@ -190,21 +280,58 @@ export default function Chatbot() {
                       <Bot size={14} className="text-orange" />
                     )}
                   </div>
-                  <div
-                    className={`max-w-[85%] px-3.5 py-2.5 rounded-lg text-sm leading-relaxed whitespace-pre-wrap ${
-                      msg.role === "user"
-                        ? "bg-orange text-white"
-                        : "bg-zinc-800/80 text-zinc-300"
-                    }`}
-                  >
-                    {msg.content}
+                  <div className="max-w-[85%]">
+                    <div
+                      className={`px-3.5 py-2.5 rounded-lg text-sm leading-relaxed whitespace-pre-wrap ${
+                        msg.role === "user"
+                          ? "bg-orange text-white"
+                          : isDark
+                          ? "bg-zinc-800/80 text-zinc-300"
+                          : "bg-zinc-100 text-zinc-700"
+                      }`}
+                    >
+                      {msg.content}
+                    </div>
+                    {msg.role === "bot" && (
+                      <div
+                        className={`flex gap-2 mt-1.5 ${
+                          isDark ? "text-zinc-500" : "text-zinc-400"
+                        }`}
+                      >
+                        <button
+                          onClick={() => speak(msg.content)}
+                          className="hover:text-orange transition-colors"
+                          aria-label="Read aloud"
+                        >
+                          <Volume2 size={14} />
+                        </button>
+                        <button
+                          onClick={() => copyToClipboard(msg.content)}
+                          className="hover:text-orange transition-colors"
+                          aria-label="Copy message"
+                        >
+                          <Copy size={14} />
+                        </button>
+                        <button
+                          onClick={() => shareContent(msg.content)}
+                          className="hover:text-orange transition-colors"
+                          aria-label="Share message"
+                        >
+                          <Share2 size={14} />
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
 
               {showSuggestions && messages.length === 1 && (
                 <div className="pt-2">
-                  <p className="text-zinc-600 text-xs mb-2">
+                  <p
+                    className={`text-xs mb-2 ${
+                      isDark ? "text-zinc-600" : "text-zinc-400"
+                    }`}
+                  >
                     Preguntas frecuentes:
                   </p>
                   <div className="space-y-1.5">
@@ -213,7 +340,11 @@ export default function Chatbot() {
                         key={i}
                         onClick={() => handleSend(q)}
                         disabled={loading}
-                        className="block w-full text-left px-3 py-2 bg-zinc-800/50 hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200 text-xs rounded-sm transition-colors disabled:opacity-50"
+                        className={`block w-full text-left px-3 py-2 text-xs rounded-sm transition-colors disabled:opacity-50 ${
+                          isDark
+                            ? "bg-zinc-800/50 hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200"
+                            : "bg-zinc-100 hover:bg-zinc-200 text-zinc-500 hover:text-zinc-700"
+                        }`}
                       >
                         {q}
                       </button>
@@ -225,17 +356,40 @@ export default function Chatbot() {
               <div ref={endRef} />
             </div>
 
-            <div className="p-3 border-t border-zinc-800">
+            <div
+              className={`p-3 border-t ${
+                isDark ? "border-zinc-800" : "border-zinc-200"
+              }`}
+            >
               <div className="flex gap-2">
+                <button
+                  onClick={toggleListening}
+                  className={`px-2.5 py-2.5 rounded-sm transition-all ${
+                    listening
+                      ? "bg-red-500 text-white animate-pulse"
+                      : isDark
+                      ? "bg-zinc-800 text-zinc-400 hover:text-zinc-200"
+                      : "bg-zinc-100 text-zinc-500 hover:text-zinc-700"
+                  }`}
+                  aria-label={
+                    listening ? "Stop recording" : "Start voice input"
+                  }
+                >
+                  {listening ? <MicOff size={16} /> : <Mic size={16} />}
+                </button>
                 <input
                   ref={inputRef}
                   type="text"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder="Escriba su consulta técnica..."
+                  placeholder={t("chatbot.placeholder")}
                   disabled={loading}
-                  className="flex-1 px-3.5 py-2.5 bg-black/50 border border-zinc-800 rounded-sm text-white text-sm placeholder-zinc-600 focus:border-orange/50 outline-none transition-colors disabled:opacity-50"
+                  className={`flex-1 px-3.5 py-2.5 rounded-sm text-sm outline-none transition-colors disabled:opacity-50 focus:border-orange/50 ${
+                    isDark
+                      ? "bg-black/50 border-zinc-800 text-white placeholder-zinc-600"
+                      : "bg-zinc-50 border-zinc-300 text-zinc-900 placeholder-zinc-400"
+                  } border`}
                 />
                 <button
                   onClick={() => handleSend()}
@@ -249,8 +403,12 @@ export default function Chatbot() {
                   )}
                 </button>
               </div>
-              <p className="text-zinc-700 text-[10px] mt-1.5 text-center">
-                Ingeniero senior — Soldadura de alto nivel & estructuras metálicas
+              <p
+                className={`text-[10px] mt-1.5 text-center ${
+                  isDark ? "text-zinc-700" : "text-zinc-400"
+                }`}
+              >
+                {t("chatbot.footer")}
               </p>
             </div>
           </motion.div>

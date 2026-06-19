@@ -2,22 +2,16 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ChevronDown } from "lucide-react";
-
-const navLinks = [
-  { label: "Inicio", href: "#hero" },
-  { label: "Proyectos", href: "#projects" },
-  { label: "Capacidades", href: "#capabilities" },
-  { label: "Proceso", href: "#process" },
-  { label: "Certificaciones", href: "#certifications" },
-  { label: "Contacto", href: "#contact" },
-];
+import { Menu, X, ChevronDown, Sun, Moon } from "lucide-react";
+import { useLang } from "@/lib/language";
+import { useTheme } from "@/lib/theme";
 
 export default function Navbar() {
+  const { t, lang, setLang } = useLang();
+  const { theme, toggle } = useTheme();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
-  const [lang, setLang] = useState("ES");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -26,6 +20,16 @@ export default function Navbar() {
   }, []);
 
   const languages = ["ES", "EN", "FR", "DE"];
+
+  const navLinks = [
+    { label: t("nav.home"), href: "#hero" },
+    { label: t("nav.projects"), href: "#projects" },
+    { label: t("nav.capabilities"), href: "#capabilities" },
+    { label: t("nav.process"), href: "#process" },
+    { label: t("nav.library"), href: "#library" },
+    { label: t("nav.certifications"), href: "#certifications" },
+    { label: t("nav.contact"), href: "#contact" },
+  ];
 
   return (
     <nav
@@ -59,12 +63,19 @@ export default function Navbar() {
                 {link.label}
               </a>
             ))}
+            <button
+              onClick={toggle}
+              className="text-zinc-400 hover:text-white transition-colors p-1"
+              aria-label="Toggle theme"
+            >
+              {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
+            </button>
             <div className="relative">
               <button
                 onClick={() => setLangOpen(!langOpen)}
                 className="flex items-center gap-1 text-sm text-zinc-400 hover:text-white transition-colors px-2 py-1"
               >
-                {lang}
+                {lang.toUpperCase()}
                 <ChevronDown size={14} />
               </button>
               <AnimatePresence>
@@ -79,11 +90,11 @@ export default function Navbar() {
                       <button
                         key={l}
                         onClick={() => {
-                          setLang(l);
+                          setLang(l.toLowerCase() as any);
                           setLangOpen(false);
                         }}
                         className={`block w-full text-left px-4 py-2 text-sm transition-colors ${
-                          lang === l
+                          lang.toUpperCase() === l
                             ? "text-orange bg-zinc-800"
                             : "text-zinc-400 hover:text-white hover:bg-zinc-800"
                         }`}
@@ -115,6 +126,15 @@ export default function Navbar() {
             className="lg:hidden bg-steel/98 backdrop-blur-md border-t border-zinc-800"
           >
             <div className="px-4 py-6 space-y-4">
+              <div className="flex items-center gap-2 pb-4 border-b border-zinc-800">
+                <button
+                  onClick={toggle}
+                  className="text-zinc-400 hover:text-white transition-colors p-1"
+                  aria-label="Toggle theme"
+                >
+                  {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
+                </button>
+              </div>
               {navLinks.map((link) => (
                 <a
                   key={link.href}
@@ -129,9 +149,9 @@ export default function Navbar() {
                 {languages.map((l) => (
                   <button
                     key={l}
-                    onClick={() => setLang(l)}
+                    onClick={() => setLang(l.toLowerCase() as any)}
                     className={`px-3 py-1 text-xs rounded ${
-                      lang === l
+                      lang.toUpperCase() === l
                         ? "bg-orange text-white"
                         : "bg-zinc-800 text-zinc-400"
                     }`}
