@@ -79,15 +79,22 @@ export default function Hero() {
       id="hero"
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
-      <div className="absolute inset-0 bg-gradient-to-b from-steel-blue via-steel to-black z-0" />
+      <div className="absolute inset-0 z-0">
+        <img
+          src="https://images.unsplash.com/photo-1749467140438-feda1a2bbbd8?w=1920&q=80"
+          alt=""
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-steel/75 mix-blend-multiply" />
+      </div>
       <canvas
         ref={canvasRef}
-        className="absolute inset-0 z-[1] opacity-60"
+        className="absolute inset-0 z-[1] opacity-40"
       />
       <img
         src="https://rotelu.es/wp-content/uploads/2018/11/Anagrama.png"
         alt="ROTELU"
-        className="absolute z-[2] opacity-[0.04] w-[60vw] sm:w-[40vw] object-contain pointer-events-none"
+        className="absolute z-[2] opacity-[0.06] w-[60vw] sm:w-[40vw] object-contain pointer-events-none"
         style={{ top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}
       />
       <div className="absolute inset-0 z-[2]">
@@ -95,7 +102,7 @@ export default function Hero() {
           className="absolute inset-0"
           style={{
             backgroundImage:
-              "radial-gradient(circle at 20% 50%, rgba(233,69,96,0.08) 0%, transparent 50%)",
+              "radial-gradient(circle at 20% 50%, rgba(233,69,96,0.12) 0%, transparent 50%)",
           }}
         />
         <div
@@ -107,7 +114,7 @@ export default function Hero() {
         />
       </div>
 
-      <div className="relative z-10 text-center px-4 sm:px-6 max-w-5xl mx-auto">
+      <div className="relative z-10 text-center px-4 sm:px-6 max-w-5xl mx-auto pt-5">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
