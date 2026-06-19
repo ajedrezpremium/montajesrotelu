@@ -48,8 +48,8 @@ export default function Navbar() {
             <span className="text-lg font-bold tracking-tight text-white">
               ROTELU
             </span>
-            <span className="hidden sm:block text-xs text-zinc-500 font-light">
-              Engineering Structures
+            <span className="hidden sm:block text-[10px] text-zinc-500 font-light leading-tight">
+              steel &amp; engineering<br />since 1988
             </span>
           </a>
 
