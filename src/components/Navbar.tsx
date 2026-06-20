@@ -45,7 +45,7 @@ export default function Navbar() {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled
-          ? "bg-steel/95 backdrop-blur-md shadow-lg shadow-black/20"
+          ? "bg-[#0f0f0f]/95 backdrop-blur-md shadow-lg shadow-black/20"
           : "bg-transparent"
       }`}
     >
@@ -68,21 +68,21 @@ export default function Navbar() {
               <a
                 key={link.href}
                 href={link.href}
-                className="text-sm text-zinc-400 hover:text-heading transition-colors tracking-wide uppercase"
+                className="text-sm text-white/70 hover:text-white transition-colors tracking-wide uppercase"
               >
                 {link.label}
               </a>
             ))}
             <button
               onClick={toggle}
-              className="text-zinc-400 hover:text-heading transition-colors p-1"
+              className="text-white/70 hover:text-white transition-colors p-1"
               aria-label="Toggle theme"
             >
               {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
             </button>
             <button
               onClick={toggleVoice}
-              className="text-zinc-400 hover:text-heading transition-colors p-1"
+              className="text-white/70 hover:text-white transition-colors p-1"
               aria-label="Toggle voice gender"
             >
               {voiceGender === "female" ? <UserRound size={16} /> : <User size={16} />}
@@ -90,7 +90,7 @@ export default function Navbar() {
             <div className="relative">
               <button
                 onClick={() => setLangOpen(!langOpen)}
-                className="flex items-center gap-1 text-sm text-zinc-400 hover:text-heading transition-colors px-2 py-1"
+                className="flex items-center gap-1 text-sm text-white/70 hover:text-white transition-colors px-2 py-1"
               >
                 {lang.toUpperCase()}
                 <ChevronDown size={14} />
@@ -101,7 +101,7 @@ export default function Navbar() {
                     initial={{ opacity: 0, y: -8 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -8 }}
-                    className="absolute right-0 mt-1 bg-zinc-900 border border-zinc-800 rounded-sm overflow-hidden"
+                    className="absolute right-0 mt-1 bg-[#0f0f0f] border border-zinc-800 rounded-sm overflow-hidden"
                   >
                     {languages.map((l) => (
                       <button
@@ -112,8 +112,8 @@ export default function Navbar() {
                         }}
                         className={`block w-full text-left px-4 py-2 text-sm transition-colors ${
                           lang.toUpperCase() === l
-                            ? "text-orange bg-zinc-800"
-                            : "text-zinc-400 hover:text-heading hover:bg-zinc-700"
+                            ? "text-orange bg-zinc-700"
+                            : "text-white/70 hover:text-white hover:bg-zinc-700"
                         }`}
                       >
                         {l}
@@ -127,7 +127,7 @@ export default function Navbar() {
 
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="lg:hidden text-heading p-2"
+            className="lg:hidden text-white p-2"
           >
             {mobileOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -140,20 +140,20 @@ export default function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden bg-steel/98 backdrop-blur-md border-t border-zinc-800"
+            className="lg:hidden bg-[#0f0f0f]/98 backdrop-blur-md border-t border-zinc-800"
           >
             <div className="px-4 py-6 space-y-4">
               <div className="flex items-center gap-2 pb-4 border-b border-zinc-800">
                 <button
                   onClick={toggle}
-                  className="text-zinc-400 hover:text-heading transition-colors p-1"
+                  className="text-white/70 hover:text-white transition-colors p-1"
                   aria-label="Toggle theme"
                 >
                   {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
                 </button>
                 <button
                   onClick={toggleVoice}
-                  className="text-zinc-400 hover:text-heading transition-colors p-1"
+                  className="text-white/70 hover:text-white transition-colors p-1"
                   aria-label="Toggle voice gender"
                 >
                   {voiceGender === "female" ? <UserRound size={16} /> : <User size={16} />}
@@ -164,7 +164,7 @@ export default function Navbar() {
                   key={link.href}
                   href={link.href}
                   onClick={() => setMobileOpen(false)}
-                  className="block text-zinc-400 hover:text-heading transition-colors uppercase text-sm tracking-wide"
+                  className="block text-white/70 hover:text-white transition-colors uppercase text-sm tracking-wide"
                 >
                   {link.label}
                 </a>
@@ -177,7 +177,7 @@ export default function Navbar() {
                     className={`px-3 py-1 text-xs rounded ${
                       lang.toUpperCase() === l
                         ? "bg-orange text-white"
-                        : "bg-zinc-800 text-zinc-400"
+                        : "bg-zinc-700 text-white/70"
                     }`}
                   >
                     {l}
