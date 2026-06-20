@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { searchManual, getManualInfo } from "@/lib/rag";
+import { searchManual } from "@/lib/rag";
 
 const SYSTEM_PROMPT = `Eres el ROTELU Engineering Assistant — experto mundial en soldadura industrial y estructuras metálicas.
 
@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    const model = process.env.OPENROUTER_MODEL || "qwen/qwen3-coder:free";
+    const model = process.env.OPENROUTER_MODEL || "google/gemma-4-31b-it:free";
 
     const lastMessage = messages[messages.length - 1]?.content || "";
     const relevantChunks = searchManual(lastMessage, 3);
@@ -69,6 +69,7 @@ export async function POST(req: NextRequest) {
       ],
       temperature: 0.3,
       max_tokens: 1024,
+      stream: true,
     });
 
     const response = await fetch(
@@ -93,11 +94,12 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const data = await response.json();
-    const content = data.choices?.[0]?.message?.content || "";
-
-    return new Response(content, {
-      headers: { "Content-Type": "text/plain; charset=utf-8" },
+    return new Response(response.body, {
+      headers: {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        Connection: "keep-alive",
+      },
     });
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : String(error);

@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/lib/theme";
 import { LanguageProvider } from "@/lib/language";
 import Chatbot from "@/components/Chatbot";
+import CookieConsent from "@/components/CookieConsent";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -89,12 +90,14 @@ export default function RootLayout({
         <link rel="preconnect" href="https://img.freepik.com" />
         <link rel="dns-prefetch" href="https://rotelu.es" />
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
+        <script defer data-domain="rotelu.es" src="https://plausible.io/js/script.js" />
       </head>
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
           <LanguageProvider>
             {children}
             <Chatbot />
+            <CookieConsent />
           </LanguageProvider>
         </ThemeProvider>
       </body>

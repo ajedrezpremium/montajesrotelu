@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { BookOpen, Download, FileText, Filter } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { BookOpen, Download, FileText, Filter, X } from "lucide-react";
 import { useLang } from "@/lib/language";
 import libraryData from "@/lib/library-data.json";
 
@@ -26,13 +26,48 @@ const allTags = [...new Set(manuals.flatMap((m) => m.tags))].sort();
 export default function Library() {
   const { t } = useLang();
   const [activeTag, setActiveTag] = useState<string | null>(null);
+  const [viewerUrl, setViewerUrl] = useState<string | null>(null);
 
   const filtered = activeTag
     ? manuals.filter((m) => m.tags.includes(activeTag))
     : manuals;
 
   return (
-    <section id="library" className="relative py-24 bg-steel/50">
+    <>
+      <AnimatePresence>
+        {viewerUrl && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[70] bg-black/90 flex items-center justify-center p-4"
+            onClick={() => setViewerUrl(null)}
+          >
+            <button
+              onClick={() => setViewerUrl(null)}
+              className="absolute top-4 right-4 z-10 p-2 bg-zinc-900/80 hover:bg-zinc-800 text-zinc-400 hover:text-white transition-colors"
+            >
+              <X size={20} />
+            </button>
+            <motion.div
+              initial={{ scale: 0.95 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.95 }}
+              className="w-full h-full max-w-6xl max-h-[90vh]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <iframe
+                src={`${viewerUrl}#view=FitH`}
+                className="w-full h-full border-0"
+                title="PDF Viewer"
+                loading="lazy"
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <section id="library" className="relative py-24 bg-steel/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -131,16 +166,14 @@ export default function Library() {
                 </div>
                 <div className="flex items-center justify-between pt-3 border-t border-zinc-800">
                   <span className="text-[11px] text-zinc-600">{manual.size}</span>
-                  <a
-                    href={manual.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <button
+                    onClick={() => setViewerUrl(manual.url)}
                     className="inline-flex items-center gap-1.5 text-xs text-orange hover:text-orange/80 transition-colors group"
                   >
                     <FileText size={12} />
                     {t("library.view")}
                     <Download size={12} className="transition-transform group-hover:translate-y-0.5" />
-                  </a>
+                  </button>
                 </div>
               </div>
             </motion.div>
@@ -154,5 +187,6 @@ export default function Library() {
         )}
       </div>
     </section>
+    </>
   );
 }

@@ -1,9 +1,11 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useLang } from "@/lib/language";
+import { getTestimonials, type Testimonial } from "@/lib/supabase";
 
-const testimonials = [
+const fallbackTestimonials = [
   { text: "clients.testimonial1", author: "clients.author1", company: "clients.company1", years: "clients.years1" },
   { text: "clients.testimonial2", author: "clients.author2", company: "clients.company2", years: "clients.years2" },
   { text: "clients.testimonial3", author: "clients.author3", company: "clients.company3", years: "clients.years3" },
@@ -11,6 +13,13 @@ const testimonials = [
 
 export default function Clients() {
   const { t } = useLang();
+  const [testimonials, setTestimonials] = useState<Testimonial[] | null>(null);
+
+  useEffect(() => {
+    getTestimonials().then((data) => {
+      if (data.length > 0) setTestimonials(data);
+    });
+  }, []);
 
   return (
     <section className="relative py-24 sm:py-32 bg-steel">
@@ -34,7 +43,7 @@ export default function Clients() {
         </motion.div>
 
         <div className="grid md:grid-cols-3 gap-6">
-          {testimonials.map((item, i) => (
+          {(testimonials ?? fallbackTestimonials).map((item: any, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, y: 30 }}
@@ -45,14 +54,20 @@ export default function Clients() {
             >
               <div className="text-4xl text-orange/20 leading-none mb-4">&ldquo;</div>
               <p className="text-zinc-300 leading-relaxed mb-6 text-sm">
-                {t(item.text)}
+                {testimonials ? item.text : t(item.text)}
               </p>
               <div className="border-t border-zinc-800/50 pt-4">
-                <div className="text-white font-medium text-sm">{t(item.author)}</div>
-                <div className="text-zinc-500 text-xs mt-1">{t(item.company)}</div>
+                <div className="text-white font-medium text-sm">
+                  {testimonials ? item.name : t(item.author)}
+                </div>
+                <div className="text-zinc-500 text-xs mt-1">
+                  {testimonials ? [item.role, item.company].filter(Boolean).join(" · ") : t(item.company)}
+                </div>
                 <div className="flex items-center gap-1 mt-2">
                   <span className="w-1.5 h-1.5 bg-orange rounded-full" />
-                  <span className="text-orange text-xs">{t(item.years)}</span>
+                  <span className="text-orange text-xs">
+                    {testimonials ? item.years : t(item.years)}
+                  </span>
                 </div>
               </div>
             </motion.div>
