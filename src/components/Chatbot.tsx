@@ -52,7 +52,7 @@ export default function Chatbot() {
   const [loading, setLoading] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(true);
   const [listening, setListening] = useState(false);
-  const [fullscreen, setFullscreen] = useState(false);
+  const [fullscreen, setFullscreen] = useState(true);
   const [speaking, setSpeaking] = useState(false);
   const [showSharePopup, setShowSharePopup] = useState<number | null>(null);
   const [voiceGender, setVoiceGender] = useState<"male" | "female">(() => {
