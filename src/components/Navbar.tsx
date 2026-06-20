@@ -41,20 +41,16 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
-          <a href="#hero" className="flex items-center gap-3 group">
+          <a href="#hero" className="flex flex-col items-center group">
             <img
               src="https://rotelu.es/wp-content/uploads/2018/11/Anagrama.png"
               alt="ROTELU"
-              className="h-10 w-auto"
+              className="h-12 w-auto"
+              style={{ filter: "drop-shadow(0 0 3px rgba(255,255,255,0.4)) drop-shadow(0 0 1px white)" }}
             />
-            <div className="flex flex-col">
-              <span className="text-lg font-bold tracking-tight text-white leading-tight">
-                ROTELU
-              </span>
-              <span className="text-[9px] text-white/70 font-light tracking-wider leading-tight">
-                steel &amp; engineering since 1988
-              </span>
-            </div>
+            <span className="text-[9px] text-white/70 font-light tracking-wider leading-tight -mt-0.5">
+              steel &amp; engineering since 1988
+            </span>
           </a>
 
           <div className="hidden lg:flex items-center gap-8">
