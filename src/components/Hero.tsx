@@ -114,7 +114,7 @@ export default function Hero() {
         />
       </div>
 
-      <div className="relative z-10 text-center px-4 sm:px-6 max-w-5xl mx-auto pt-5">
+      <div className="relative z-10 text-center px-4 sm:px-6 max-w-5xl mx-auto pt-16 sm:pt-20">
         <motion.h1
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
