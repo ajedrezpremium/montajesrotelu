@@ -34,8 +34,7 @@ export default function Clients() {
           <span className="text-orange text-xs uppercase tracking-[0.2em] font-medium">
             {t("clients.tag")}
           </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3">
-            {t("clients.title")}
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-heading mt-3">
           </h2>
           <p className="mt-4 text-zinc-500 max-w-2xl mx-auto">
             {t("clients.subtitle")}
@@ -57,8 +56,7 @@ export default function Clients() {
                 {testimonials ? item.text : t(item.text)}
               </p>
               <div className="border-t border-zinc-800/50 pt-4">
-                <div className="text-white font-medium text-sm">
-                  {testimonials ? item.name : t(item.author)}
+                <div className="text-heading font-medium text-sm">
                 </div>
                 <div className="text-zinc-500 text-xs mt-1">
                   {testimonials ? [item.role, item.company].filter(Boolean).join(" · ") : t(item.company)}

@@ -38,7 +38,7 @@ export default function Capabilities() {
           <span className="text-orange text-xs uppercase tracking-[0.2em] font-medium">
             {t("caps.tag")}
           </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-heading mt-3">
             {t("caps.title")}
           </h2>
         </motion.div>
@@ -62,7 +62,7 @@ export default function Capabilities() {
                 />
                 <div className="p-6 sm:p-8">
                   <div className="flex items-center gap-4 mb-5">
-                    <h3 className="text-xl font-bold text-white">{t(`caps.${cap.key}.title`)}</h3>
+                    <h3 className="text-xl font-bold text-heading">{t(`caps.${cap.key}.title`)}</h3>
                   </div>
                   <p className="text-zinc-400 text-sm leading-relaxed mb-5">
                     {t(`caps.${cap.key}.desc`)}

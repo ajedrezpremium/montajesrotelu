@@ -27,7 +27,7 @@ export default function Certifications() {
           <span className="text-orange text-xs uppercase tracking-[0.2em] font-medium">
             {t("cert.tag")}
           </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-heading mt-3">
             {t("cert.title")}
           </h2>
           <p className="mt-4 text-zinc-500 max-w-2xl mx-auto">
@@ -50,7 +50,7 @@ export default function Certifications() {
                 <div className="w-14 h-14 mx-auto mb-5 bg-zinc-800/50 rounded-sm flex items-center justify-center group-hover:bg-orange/10 transition-colors">
                   <Icon className="text-orange" size={28} />
                 </div>
-                <h3 className="text-sm font-bold text-white mb-3 uppercase tracking-wider">
+                <h3 className="text-sm font-bold text-heading mb-3 uppercase tracking-wider">
                   {t(cert.titleKey)}
                 </h3>
                 <p className="text-zinc-500 text-xs leading-relaxed">

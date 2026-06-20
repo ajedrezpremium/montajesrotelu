@@ -63,8 +63,7 @@ export default function Contact() {
           <span className="text-orange text-xs uppercase tracking-[0.2em] font-medium">
             {t("contact.tag")}
           </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3">
-            {t("contact.title")}
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-heading mt-3">
           </h2>
           <p className="mt-4 text-zinc-500 max-w-2xl mx-auto">
             {t("contact.subtitle")}
@@ -89,7 +88,7 @@ export default function Contact() {
                   required
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  className="w-full px-4 py-3 bg-black/50 border border-zinc-800 rounded-sm text-white text-sm focus:border-orange/50 outline-none transition-colors"
+                  className="w-full px-4 py-3 bg-black/50 border border-zinc-800 rounded-sm text-heading text-sm focus:border-orange/50 outline-none transition-colors"
                   placeholder={t("contact.form.name")}
                 />
               </div>
@@ -101,7 +100,7 @@ export default function Contact() {
                   type="text"
                   value={form.company}
                   onChange={(e) => setForm({ ...form, company: e.target.value })}
-                  className="w-full px-4 py-3 bg-black/50 border border-zinc-800 rounded-sm text-white text-sm focus:border-orange/50 outline-none transition-colors"
+                  className="w-full px-4 py-3 bg-black/50 border border-zinc-800 rounded-sm text-heading text-sm focus:border-orange/50 outline-none transition-colors"
                   placeholder={t("contact.form.company")}
                 />
               </div>
@@ -117,7 +116,7 @@ export default function Contact() {
                   required
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  className="w-full px-4 py-3 bg-black/50 border border-zinc-800 rounded-sm text-white text-sm focus:border-orange/50 outline-none transition-colors"
+                  className="w-full px-4 py-3 bg-black/50 border border-zinc-800 rounded-sm text-heading text-sm focus:border-orange/50 outline-none transition-colors"
                   placeholder={t("contact.form.email")}
                 />
               </div>
@@ -129,7 +128,7 @@ export default function Contact() {
                   type="tel"
                   value={form.phone}
                   onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                  className="w-full px-4 py-3 bg-black/50 border border-zinc-800 rounded-sm text-white text-sm focus:border-orange/50 outline-none transition-colors"
+                  className="w-full px-4 py-3 bg-black/50 border border-zinc-800 rounded-sm text-heading text-sm focus:border-orange/50 outline-none transition-colors"
                   placeholder={t("contact.form.phone")}
                 />
               </div>
@@ -144,7 +143,7 @@ export default function Contact() {
                   type="text"
                   value={form.country}
                   onChange={(e) => setForm({ ...form, country: e.target.value })}
-                  className="w-full px-4 py-3 bg-black/50 border border-zinc-800 rounded-sm text-white text-sm focus:border-orange/50 outline-none transition-colors"
+                  className="w-full px-4 py-3 bg-black/50 border border-zinc-800 rounded-sm text-heading text-sm focus:border-orange/50 outline-none transition-colors"
                   placeholder={t("contact.form.country")}
                 />
               </div>
@@ -155,7 +154,7 @@ export default function Contact() {
                 <select
                   value={form.sector}
                   onChange={(e) => setForm({ ...form, sector: e.target.value })}
-                  className="w-full px-4 py-3 bg-black/50 border border-zinc-800 rounded-sm text-white text-sm focus:border-orange/50 outline-none transition-colors"
+                  className="w-full px-4 py-3 bg-black/50 border border-zinc-800 rounded-sm text-heading text-sm focus:border-orange/50 outline-none transition-colors"
                 >
                   <option value="">{t("contact.form.sector")}</option>
                   {sectorOptions.map((opt, i) => (
@@ -178,7 +177,7 @@ export default function Contact() {
                 onChange={(e) =>
                   setForm({ ...form, description: e.target.value })
                 }
-                className="w-full px-4 py-3 bg-black/50 border border-zinc-800 rounded-sm text-white text-sm focus:border-orange/50 outline-none transition-colors resize-none"
+                className="w-full px-4 py-3 bg-black/50 border border-zinc-800 rounded-sm text-heading text-sm focus:border-orange/50 outline-none transition-colors resize-none"
                 placeholder={t("contact.form.description")}
               />
             </div>

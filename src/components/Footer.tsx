@@ -15,7 +15,7 @@ export default function Footer() {
               <div className="w-7 h-7 bg-orange rounded-sm flex items-center justify-center font-bold text-white text-xs">
                 R
               </div>
-              <span className="font-bold text-white">ROTELU</span>
+              <span className="font-bold text-heading">ROTELU</span>
             </div>
             <p className="text-zinc-600 text-xs leading-relaxed">
               {t("footer.description")}
@@ -23,7 +23,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="text-white text-xs uppercase tracking-wider font-bold mb-4">
+            <h4 className="text-heading text-xs uppercase tracking-wider font-bold mb-4">
               {t("footer.solutions")}
             </h4>
             <ul className="space-y-2">
@@ -46,7 +46,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="text-white text-xs uppercase tracking-wider font-bold mb-4">
+            <h4 className="text-heading text-xs uppercase tracking-wider font-bold mb-4">
               {t("footer.company")}
             </h4>
             <ul className="space-y-2">
@@ -69,7 +69,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="text-white text-xs uppercase tracking-wider font-bold mb-4">
+            <h4 className="text-heading text-xs uppercase tracking-wider font-bold mb-4">
               {t("footer.contact")}
             </h4>
             <ul className="space-y-2 text-zinc-600 text-xs">

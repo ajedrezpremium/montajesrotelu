@@ -74,7 +74,7 @@ export default function Projects() {
           <span className="text-orange text-xs uppercase tracking-[0.2em] font-medium">
             {t("projects.tag")}
           </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-heading mt-3">
             {t("projects.title")}
           </h2>
           <p className="mt-4 text-zinc-500 max-w-2xl mx-auto">
@@ -134,7 +134,7 @@ export default function Projects() {
                         )}
                       </div>
 
-                      <h3 className="text-2xl sm:text-3xl font-bold text-white mb-4">
+                      <h3 className="text-2xl sm:text-3xl font-bold text-heading mb-4">
                         {title}
                       </h3>
 

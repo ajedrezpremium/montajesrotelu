@@ -78,8 +78,7 @@ export default function Library() {
           <span className="inline-block text-xs tracking-[0.2em] text-orange uppercase mb-4">
             ROTELU
           </span>
-          <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
-            {t("library.title")}
+          <h2 className="text-3xl lg:text-4xl font-bold text-heading mb-4">
           </h2>
           <p className="text-zinc-400 max-w-2xl mx-auto text-sm leading-relaxed">
             {t("library.subtitle")}
@@ -148,8 +147,7 @@ export default function Library() {
                   <BookOpen size={14} className="text-orange shrink-0" />
                   <span className="text-xs text-zinc-500">{manual.year}</span>
                 </div>
-                <h3 className="text-sm font-semibold text-white mb-2 leading-relaxed line-clamp-2">
-                  {manual.title}
+                <h3 className="text-sm font-semibold text-heading mb-2 leading-relaxed line-clamp-2">
                 </h3>
                 <p className="text-xs text-zinc-500 leading-relaxed mb-4 line-clamp-3">
                   {t(manual.descKey)}

@@ -30,8 +30,7 @@ export default function Process() {
           <span className="text-orange text-xs uppercase tracking-[0.2em] font-medium">
             {t("process.tag")}
           </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3">
-            {t("process.title")}
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-heading mt-3">
           </h2>
           <p className="mt-4 text-zinc-500 max-w-2xl mx-auto">
             {t("process.subtitle")}
@@ -62,7 +61,7 @@ export default function Process() {
                     <span className="text-orange/30 text-sm font-mono">
                       {step.num}
                     </span>
-                    <h3 className="text-lg font-bold text-white mt-1">
+                    <h3 className="text-lg font-bold text-heading mt-1">
                       {t(`process.${step.key}.title`)}
                     </h3>
                     <p className="text-zinc-500 text-sm mt-2">{t(`process.${step.key}.desc`)}</p>
@@ -79,7 +78,7 @@ export default function Process() {
                   <span className="text-orange/30 text-xs font-mono">
                     {step.num}
                   </span>
-                  <h3 className="text-base font-bold text-white">{t(`process.${step.key}.title`)}</h3>
+                  <h3 className="text-base font-bold text-heading">{t(`process.${step.key}.title`)}</h3>
                   <p className="text-zinc-500 text-xs mt-1">{t(`process.${step.key}.desc`)}</p>
                 </div>
 

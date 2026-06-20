@@ -135,7 +135,7 @@ export default function InfoPage() {
           &larr; ROTELU
         </a>
 
-        <h1 className="text-2xl sm:text-3xl font-bold text-white mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-heading mb-8">
           {content.title}
         </h1>
 

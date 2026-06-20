@@ -34,7 +34,7 @@ export default function Facilities() {
           <span className="text-orange text-xs uppercase tracking-[0.2em] font-medium">
             {t("fac.tag")}
           </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-heading mt-3">
             {t("fac.title")}
           </h2>
           <p className="mt-4 text-zinc-500 max-w-2xl mx-auto">
@@ -72,7 +72,7 @@ export default function Facilities() {
               className="p-5 bg-black/30 border border-zinc-800/30 rounded-sm"
             >
               <Factory className="text-orange/60 mb-3" size={22} />
-              <h3 className="text-sm font-bold text-white mb-1">{t(`fac.${item.key}.title`)}</h3>
+              <h3 className="text-sm font-bold text-heading mb-1">{t(`fac.${item.key}.title`)}</h3>
               <p className="text-zinc-500 text-xs leading-relaxed">{t(`fac.${item.key}.desc`)}</p>
             </motion.div>
           ))}

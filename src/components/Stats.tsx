@@ -28,7 +28,7 @@ function Counter({ end, suffix = "", label }: { end: number; suffix?: string; la
 
   return (
     <div ref={ref} className="text-center">
-      <div className="text-4xl sm:text-5xl font-bold text-white">
+      <div className="text-4xl sm:text-5xl font-bold text-heading">
         {count}
         {suffix}
       </div>
@@ -53,8 +53,7 @@ export default function Stats() {
           <span className="text-orange text-xs uppercase tracking-[0.2em] font-medium">
             {t("stats.tag")}
           </span>
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mt-3">
-            {t("stats.title")}
+          <h2 className="text-3xl sm:text-4xl font-bold text-heading mt-3">
           </h2>
         </motion.div>
 

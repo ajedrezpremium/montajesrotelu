@@ -171,14 +171,14 @@ export default function AdminPage() {
     return (
       <main className="min-h-screen bg-black flex items-center justify-center p-4">
         <div className="w-full max-w-sm">
-          <h1 className="text-2xl font-bold text-white text-center mb-6">Admin ROTELU</h1>
+          <h1 className="text-2xl font-bold text-heading text-center mb-6">Admin ROTELU</h1>
           <form onSubmit={(e) => { e.preventDefault(); handleLogin(); }} className="space-y-4">
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Contraseña"
-              className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 text-white text-sm focus:outline-none focus:border-orange/50"
+              className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 text-heading text-sm focus:outline-none focus:border-orange/50"
               autoFocus
             />
             {loginError && <p className="text-red-400 text-xs">{loginError}</p>}
@@ -195,35 +195,35 @@ export default function AdminPage() {
   }
 
   return (
-    <main className="min-h-screen bg-black text-white">
+    <main className="min-h-screen bg-black text-heading">
       <header className="border-b border-zinc-800 px-4 sm:px-6 py-4 flex items-center justify-between">
         <h1 className="text-lg font-bold">Admin ROTELU</h1>
         <div className="flex items-center gap-4">
           <button
             onClick={() => setTab("projects")}
-            className={`text-sm px-3 py-1.5 transition-colors ${tab === "projects" ? "bg-orange text-white" : "text-zinc-400 hover:text-white"}`}
+            className={`text-sm px-3 py-1.5 transition-colors ${tab === "projects" ? "bg-orange text-white" : "text-zinc-400 hover:text-heading"}`}
           >
             Proyectos
           </button>
           <button
             onClick={() => setTab("contacts")}
-            className={`text-sm px-3 py-1.5 transition-colors ${tab === "contacts" ? "bg-orange text-white" : "text-zinc-400 hover:text-white"}`}
+            className={`text-sm px-3 py-1.5 transition-colors ${tab === "contacts" ? "bg-orange text-white" : "text-zinc-400 hover:text-heading"}`}
           >
             Contactos
           </button>
           <button
             onClick={() => setTab("testimonials")}
-            className={`text-sm px-3 py-1.5 transition-colors ${tab === "testimonials" ? "bg-orange text-white" : "text-zinc-400 hover:text-white"}`}
+            className={`text-sm px-3 py-1.5 transition-colors ${tab === "testimonials" ? "bg-orange text-white" : "text-zinc-400 hover:text-heading"}`}
           >
             Testimonios
           </button>
           <button
             onClick={() => setTab("team")}
-            className={`text-sm px-3 py-1.5 transition-colors ${tab === "team" ? "bg-orange text-white" : "text-zinc-400 hover:text-white"}`}
+            className={`text-sm px-3 py-1.5 transition-colors ${tab === "team" ? "bg-orange text-white" : "text-zinc-400 hover:text-heading"}`}
           >
             Equipo
           </button>
-          <button onClick={handleLogout} className="text-xs text-zinc-500 hover:text-white ml-4">
+          <button onClick={handleLogout} className="text-xs text-zinc-500 hover:text-heading ml-4">
             Salir
           </button>
         </div>
@@ -313,7 +313,7 @@ export default function AdminPage() {
                         {saving ? "Guardando..." : "Guardar"}
                       </button>
                       <button onClick={() => setEditing(null)}
-                        className="px-6 py-2 border border-zinc-700 text-zinc-400 text-sm hover:text-white transition-colors">
+                        className="px-6 py-2 border border-zinc-700 text-zinc-400 text-sm hover:text-heading transition-colors">
                         Cancelar
                       </button>
                     </div>
@@ -340,7 +340,7 @@ export default function AdminPage() {
                       setHighlightsInput((p.highlights || []).join("\n"));
                       setImagesInput((p.images || []).join("\n"));
                     }}
-                      className="px-3 py-1 text-xs border border-zinc-700 text-zinc-400 hover:text-white transition-colors">
+                      className="px-3 py-1 text-xs border border-zinc-700 text-zinc-400 hover:text-heading transition-colors">
                       Editar
                     </button>
                     <button onClick={() => handleDelete(p.id)}
@@ -384,7 +384,7 @@ export default function AdminPage() {
                     <div className="flex gap-1 shrink-0">
                       {c.status === "new" && (
                         <button onClick={() => handleContactStatus(c.id, "read")}
-                          className="px-2 py-1 text-[10px] border border-zinc-700 text-zinc-500 hover:text-white">
+                          className="px-2 py-1 text-[10px] border border-zinc-700 text-zinc-500 hover:text-heading">
                           Leído
                         </button>
                       )}
@@ -526,7 +526,7 @@ export default function AdminPage() {
                         {saving ? "Guardando..." : "Guardar"}
                       </button>
                       <button onClick={() => setEditingTestimonial(null)}
-                        className="px-6 py-2 border border-zinc-700 text-zinc-400 text-sm hover:text-white transition-colors">
+                        className="px-6 py-2 border border-zinc-700 text-zinc-400 text-sm hover:text-heading transition-colors">
                         Cancelar
                       </button>
                     </div>
@@ -548,7 +548,7 @@ export default function AdminPage() {
                   </div>
                   <div className="flex gap-2 shrink-0">
                     <button onClick={() => setEditingTestimonial(t)}
-                      className="px-3 py-1 text-xs border border-zinc-700 text-zinc-400 hover:text-white transition-colors">
+                      className="px-3 py-1 text-xs border border-zinc-700 text-zinc-400 hover:text-heading transition-colors">
                       Editar
                     </button>
                     <button onClick={async () => {

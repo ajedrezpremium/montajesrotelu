@@ -13,7 +13,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   }
 
   return (
-    <main className="min-h-screen bg-black text-white">
+    <main className="min-h-screen bg-black text-heading">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
         <Link
           href="/#projects"
