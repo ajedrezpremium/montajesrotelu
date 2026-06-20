@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   MessageCircle, X, Send, Bot, User, Loader2,
   Mic, MicOff, Volume2, VolumeX, Copy, Share2, Maximize2, Minimize2,
-  Globe, Users, Briefcase, MessageCircle as WhatsApp, Mail, GripHorizontal,
+  Globe, Users, Briefcase, MessageCircle as WhatsApp, Mail,
 } from "lucide-react";
 import { findResponse } from "@/lib/knowledge-base";
 import { useLang } from "@/lib/language";
@@ -55,10 +55,6 @@ export default function Chatbot() {
   const [fullscreen, setFullscreen] = useState(false);
   const [speaking, setSpeaking] = useState(false);
   const [showSharePopup, setShowSharePopup] = useState<number | null>(null);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const dragging = useRef(false);
-  const dragStart = useRef({ x: 0, y: 0 });
-  const posStart = useRef({ x: 0, y: 0 });
   const [voiceGender, setVoiceGender] = useState<"male" | "female">(() => {
     if (typeof window !== "undefined") {
       return (localStorage.getItem("rotelu-voice") as "male" | "female") || "female";
@@ -70,6 +66,7 @@ export default function Chatbot() {
   const recognitionRef = useRef<any>(null);
   const speechSynthRef = useRef<SpeechSynthesisUtterance | null>(null);
   const prevLoading = useRef(loading);
+  const dragControls = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -274,29 +271,6 @@ export default function Chatbot() {
     }
   };
 
-  const onDragStart = (e: React.MouseEvent) => {
-    if (fullscreen) return;
-    dragging.current = true;
-    dragStart.current = { x: e.clientX, y: e.clientY };
-    posStart.current = { x: position.x, y: position.y };
-  };
-
-  useEffect(() => {
-    const onMove = (e: MouseEvent) => {
-      if (!dragging.current || fullscreen) return;
-      const dx = e.clientX - dragStart.current.x;
-      const dy = e.clientY - dragStart.current.y;
-      setPosition({ x: posStart.current.x + dx, y: posStart.current.y + dy });
-    };
-    const onUp = () => { dragging.current = false; };
-    window.addEventListener("mousemove", onMove);
-    window.addEventListener("mouseup", onUp);
-    return () => {
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mouseup", onUp);
-    };
-  }, [fullscreen, position.x, position.y]);
-
   return (
     <>
       <button
@@ -318,27 +292,27 @@ export default function Chatbot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className={`fixed z-50 ${
+            drag={!fullscreen}
+            dragMomentum={false}
+            dragElastic={0}
+            className={`${
               fullscreen
-                ? "inset-4 sm:inset-8"
-                : "bottom-24 right-6 w-[380px] sm:w-[440px] h-[600px]"
+                ? "fixed inset-4 sm:inset-8"
+                : "fixed bottom-24 right-6 w-[380px] sm:w-[440px] h-[600px]"
             } ${
               isDark ? "bg-zinc-900 border-zinc-800" : "bg-white border-zinc-200"
-            } border rounded-lg shadow-2xl shadow-black/50 flex flex-col overflow-hidden`}
-            style={!fullscreen ? { transform: `translate(${position.x}px, ${position.y}px)` } : undefined}
+            } border rounded-lg shadow-2xl shadow-black/50 flex flex-col overflow-hidden ${
+              fullscreen ? "" : "cursor-grab active:cursor-grabbing"
+            }`}
           >
             <div
-              onMouseDown={onDragStart}
-              className={`cursor-grab active:cursor-grabbing flex items-center justify-between px-4 py-3 ${
+              className={`flex items-center justify-between px-4 py-3 ${
                 isDark
                   ? "bg-gradient-to-r from-zinc-800 to-zinc-900 border-zinc-800"
                   : "bg-gradient-to-r from-zinc-100 to-white border-zinc-200"
               } border-b`}
             >
               <div className="flex items-center gap-3">
-                {!fullscreen && (
-                  <GripHorizontal size={14} className="text-zinc-600 shrink-0" />
-                )}
                 <div className="w-8 h-8 bg-orange/20 rounded-full flex items-center justify-center">
                   <Bot size={16} className="text-orange" />
                 </div>
