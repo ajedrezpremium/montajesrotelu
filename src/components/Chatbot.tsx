@@ -31,7 +31,7 @@ function renderMarkdown(text: string) {
 }
 
 export default function Chatbot() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
@@ -44,6 +44,12 @@ export default function Chatbot() {
   const [showSuggestions, setShowSuggestions] = useState(true);
   const [listening, setListening] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
+  const [voiceGender, setVoiceGender] = useState<"male" | "female">(() => {
+    if (typeof window !== "undefined") {
+      return (localStorage.getItem("rotelu-voice") as "male" | "female") || "female";
+    }
+    return "female";
+  });
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const recognitionRef = useRef<any>(null);
@@ -59,7 +65,13 @@ export default function Chatbot() {
   }, [open]);
 
   useEffect(() => {
+    const onStorage = () => {
+      const v = localStorage.getItem("rotelu-voice") as "male" | "female" | null;
+      if (v) setVoiceGender(v);
+    };
+    window.addEventListener("storage", onStorage);
     return () => {
+      window.removeEventListener("storage", onStorage);
       recognitionRef.current?.abort();
     };
   }, []);
@@ -81,6 +93,7 @@ export default function Chatbot() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          lang,
           messages: [
             ...messages.slice(1).map((m) => ({
               role: m.role === "bot" ? "assistant" : ("user" as const),
@@ -189,8 +202,14 @@ export default function Chatbot() {
   const speak = (text: string) => {
     if (!window.speechSynthesis) return;
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "es-ES";
+    const langMap: Record<string, string> = { es: "es-ES", en: "en-US", fr: "fr-FR", de: "de-DE" };
+    utterance.lang = langMap[lang] || "en-US";
     utterance.rate = 1;
+    const voices = window.speechSynthesis.getVoices();
+    const match = voices.find(
+      (v) => v.lang.startsWith(utterance.lang.slice(0, 2)) && v.name.toLowerCase().includes(voiceGender)
+    );
+    if (match) utterance.voice = match;
     window.speechSynthesis.speak(utterance);
   };
 

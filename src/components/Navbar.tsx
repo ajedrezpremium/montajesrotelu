@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ChevronDown, Sun, Moon } from "lucide-react";
+import { Menu, X, ChevronDown, Sun, Moon, User, UserRound } from "lucide-react";
 import { useLang } from "@/lib/language";
 import { useTheme } from "@/lib/theme";
 
@@ -12,6 +12,16 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
+  const [voiceGender, setVoiceGender] = useState<"male" | "female">(() => {
+    if (typeof window !== "undefined") return (localStorage.getItem("rotelu-voice") as "male" | "female") || "female";
+    return "female";
+  });
+
+  const toggleVoice = () => {
+    const next = voiceGender === "female" ? "male" : "female";
+    setVoiceGender(next);
+    localStorage.setItem("rotelu-voice", next);
+  };
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -69,6 +79,13 @@ export default function Navbar() {
               aria-label="Toggle theme"
             >
               {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
+            </button>
+            <button
+              onClick={toggleVoice}
+              className="text-zinc-400 hover:text-white transition-colors p-1"
+              aria-label="Toggle voice gender"
+            >
+              {voiceGender === "female" ? <UserRound size={16} /> : <User size={16} />}
             </button>
             <div className="relative">
               <button
@@ -133,6 +150,13 @@ export default function Navbar() {
                   aria-label="Toggle theme"
                 >
                   {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
+                </button>
+                <button
+                  onClick={toggleVoice}
+                  className="text-zinc-400 hover:text-white transition-colors p-1"
+                  aria-label="Toggle voice gender"
+                >
+                  {voiceGender === "female" ? <UserRound size={16} /> : <User size={16} />}
                 </button>
               </div>
               {navLinks.map((link) => (
