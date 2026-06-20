@@ -178,9 +178,6 @@ export default function Hero() {
         className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
       >
         <div className="flex flex-col items-center gap-2">
-          <span className="text-zinc-400 text-xs uppercase tracking-widest">
-            {t("common.scroll")}
-          </span>
           <div className="w-px h-8 bg-gradient-to-b from-orange/50 to-transparent" />
         </div>
       </motion.div>

@@ -250,6 +250,13 @@ const translations: Record<Language, Record<string, string | string[]>> = {
     "chatbot.status.online": "Online",
     "chatbot.status.thinking": "Thinking...",
     "chatbot.footer": "Powered by Rotelu AI",
+    "chatbot.q1": "What welding certifications do you have?",
+    "chatbot.q2": "Do you fabricate offshore wind components?",
+    "chatbot.q3": "Do you manufacture hydroelectric penstocks?",
+    "chatbot.q4": "What is your project experience?",
+    "chatbot.q5": "What materials do you work with?",
+    "chatbot.q6": "How do I request a quote?",
+    "chatbot.faq": "Frequently asked questions:",
 
     /* Common */
     "common.learnMore": "Learn More",
@@ -493,6 +500,13 @@ const translations: Record<Language, Record<string, string | string[]>> = {
     "chatbot.status.online": "En línea",
     "chatbot.status.thinking": "Pensando...",
     "chatbot.footer": "Desarrollado por Rotelu AI",
+    "chatbot.q1": "¿Qué certificaciones de soldadura tenéis?",
+    "chatbot.q2": "¿Fabricáis componentes para eólica offshore?",
+    "chatbot.q3": "¿Hacéis tuberías forzadas hidroeléctricas?",
+    "chatbot.q4": "¿Cuál es vuestra experiencia en proyectos?",
+    "chatbot.q5": "¿Qué materiales trabajáis?",
+    "chatbot.q6": "¿Cómo solicito un presupuesto?",
+    "chatbot.faq": "Preguntas frecuentes:",
 
     /* Common */
     "common.learnMore": "Saber Más",
@@ -736,6 +750,13 @@ const translations: Record<Language, Record<string, string | string[]>> = {
     "chatbot.status.online": "En ligne",
     "chatbot.status.thinking": "Réflexion...",
     "chatbot.footer": "Propulsé par Rotelu AI",
+    "chatbot.q1": "Quelles certifications de soudure avez-vous ?",
+    "chatbot.q2": "Fabriquez-vous des composants éoliens offshore ?",
+    "chatbot.q3": "Fabriquez-vous des conduites forcées hydroélectriques ?",
+    "chatbot.q4": "Quelle est votre expérience en projets ?",
+    "chatbot.q5": "Avec quels matériaux travaillez-vous ?",
+    "chatbot.q6": "Comment demander un devis ?",
+    "chatbot.faq": "Questions fréquentes :",
 
     /* Common */
     "common.learnMore": "En Savoir Plus",
@@ -979,6 +1000,13 @@ const translations: Record<Language, Record<string, string | string[]>> = {
     "chatbot.status.online": "Online",
     "chatbot.status.thinking": "Denke nach...",
     "chatbot.footer": "Powered by Rotelu AI",
+    "chatbot.q1": "Welche Schweißzertifikate haben Sie?",
+    "chatbot.q2": "Stellen Sie Offshore-Windkomponenten her?",
+    "chatbot.q3": "Produzieren Sie Wasserkraft-Druckrohrleitungen?",
+    "chatbot.q4": "Welche Projekterfahrung haben Sie?",
+    "chatbot.q5": "Mit welchen Materialien arbeiten Sie?",
+    "chatbot.q6": "Wie kann ich ein Angebot anfordern?",
+    "chatbot.faq": "Häufig gestellte Fragen:",
 
     /* Common */
     "common.learnMore": "Mehr erfahren",

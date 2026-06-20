@@ -4,9 +4,10 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   MessageCircle, X, Send, Bot, User, Loader2,
-  Mic, MicOff, Volume2, Copy, Share2, Maximize2, Minimize2,
+  Mic, MicOff, Volume2, VolumeX, Copy, Share2, Maximize2, Minimize2,
+  Globe, Users, Briefcase, MessageCircle as WhatsApp, Mail, GripHorizontal,
 } from "lucide-react";
-import { findResponse, suggestedQuestions } from "@/lib/knowledge-base";
+import { findResponse } from "@/lib/knowledge-base";
 import { useLang } from "@/lib/language";
 import { useTheme } from "@/lib/theme";
 
@@ -14,6 +15,14 @@ interface Message {
   role: "user" | "bot";
   content: string;
 }
+
+const SOCIALS = [
+  { id: "x", icon: Globe, color: "hover:text-white", url: (t: string) => `https://twitter.com/intent/tweet?text=${encodeURIComponent(t)}` },
+  { id: "facebook", icon: Users, color: "hover:text-[#1877F2]", url: (t: string) => `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(typeof window !== 'undefined' ? window.location.href : '')}&quote=${encodeURIComponent(t)}` },
+  { id: "linkedin", icon: Briefcase, color: "hover:text-[#0A66C2]", url: (t: string) => `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(typeof window !== 'undefined' ? window.location.href : '')}` },
+  { id: "whatsapp", icon: WhatsApp, color: "hover:text-[#25D366]", url: (t: string) => `https://wa.me/?text=${encodeURIComponent(t)}` },
+  { id: "email", icon: Mail, color: "hover:text-orange", url: (t: string) => `mailto:?body=${encodeURIComponent(t)}` },
+];
 
 function renderMarkdown(text: string) {
   return text
@@ -37,13 +46,19 @@ export default function Chatbot() {
 
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-    { role: "bot", content: t("chatbot.greeting") },
+    { role: "bot", content: "" },
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(true);
   const [listening, setListening] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
+  const [speaking, setSpeaking] = useState(false);
+  const [showSharePopup, setShowSharePopup] = useState<number | null>(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const dragging = useRef(false);
+  const dragStart = useRef({ x: 0, y: 0 });
+  const posStart = useRef({ x: 0, y: 0 });
   const [voiceGender, setVoiceGender] = useState<"male" | "female">(() => {
     if (typeof window !== "undefined") {
       return (localStorage.getItem("rotelu-voice") as "male" | "female") || "female";
@@ -53,6 +68,8 @@ export default function Chatbot() {
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const recognitionRef = useRef<any>(null);
+  const speechSynthRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const prevLoading = useRef(loading);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -75,6 +92,21 @@ export default function Chatbot() {
       recognitionRef.current?.abort();
     };
   }, []);
+
+  useEffect(() => {
+    setMessages([{ role: "bot", content: t("chatbot.greeting") }]);
+    setShowSuggestions(true);
+  }, [lang]);
+
+  useEffect(() => {
+    if (prevLoading.current && !loading) {
+      const last = messages[messages.length - 1];
+      if (last && last.role === "bot" && last.content) {
+        speak(last.content);
+      }
+    }
+    prevLoading.current = loading;
+  }, [loading]);
 
   const handleSend = async (text?: string) => {
     const message = (text || input).trim();
@@ -200,6 +232,7 @@ export default function Chatbot() {
   }, [listening]);
 
   const speak = (text: string) => {
+    window.speechSynthesis.cancel();
     if (!window.speechSynthesis) return;
     const utterance = new SpeechSynthesisUtterance(text);
     const langMap: Record<string, string> = { es: "es-ES", en: "en-US", fr: "fr-FR", de: "de-DE" };
@@ -210,7 +243,17 @@ export default function Chatbot() {
       (v) => v.lang.startsWith(utterance.lang.slice(0, 2)) && v.name.toLowerCase().includes(voiceGender)
     );
     if (match) utterance.voice = match;
+    utterance.onstart = () => setSpeaking(true);
+    utterance.onend = () => setSpeaking(false);
+    utterance.onerror = () => setSpeaking(false);
+    speechSynthRef.current = utterance;
     window.speechSynthesis.speak(utterance);
+  };
+
+  const stopSpeaking = () => {
+    window.speechSynthesis.cancel();
+    setSpeaking(false);
+    speechSynthRef.current = null;
   };
 
   const copyToClipboard = async (text: string) => {
@@ -221,15 +264,38 @@ export default function Chatbot() {
     }
   };
 
-  const shareContent = async (text: string) => {
+  const handleSocialShare = (text: string, url: string) => {
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+
+  const shareContent = (text: string) => {
     if (navigator.share) {
-      try {
-        await navigator.share({ text });
-      } catch {
-        // user cancelled
-      }
+      navigator.share({ text }).catch(() => {});
     }
   };
+
+  const onDragStart = (e: React.MouseEvent) => {
+    if (fullscreen) return;
+    dragging.current = true;
+    dragStart.current = { x: e.clientX, y: e.clientY };
+    posStart.current = { x: position.x, y: position.y };
+  };
+
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => {
+      if (!dragging.current || fullscreen) return;
+      const dx = e.clientX - dragStart.current.x;
+      const dy = e.clientY - dragStart.current.y;
+      setPosition({ x: posStart.current.x + dx, y: posStart.current.y + dy });
+    };
+    const onUp = () => { dragging.current = false; };
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+    };
+  }, [fullscreen, position.x, position.y]);
 
   return (
     <>
@@ -259,15 +325,20 @@ export default function Chatbot() {
             } ${
               isDark ? "bg-zinc-900 border-zinc-800" : "bg-white border-zinc-200"
             } border rounded-lg shadow-2xl shadow-black/50 flex flex-col overflow-hidden`}
+            style={!fullscreen ? { transform: `translate(${position.x}px, ${position.y}px)` } : undefined}
           >
             <div
-              className={`flex items-center justify-between px-4 py-3 ${
+              onMouseDown={onDragStart}
+              className={`cursor-grab active:cursor-grabbing flex items-center justify-between px-4 py-3 ${
                 isDark
                   ? "bg-gradient-to-r from-zinc-800 to-zinc-900 border-zinc-800"
                   : "bg-gradient-to-r from-zinc-100 to-white border-zinc-200"
               } border-b`}
             >
               <div className="flex items-center gap-3">
+                {!fullscreen && (
+                  <GripHorizontal size={14} className="text-zinc-600 shrink-0" />
+                )}
                 <div className="w-8 h-8 bg-orange/20 rounded-full flex items-center justify-center">
                   <Bot size={16} className="text-orange" />
                 </div>
@@ -364,17 +435,27 @@ export default function Chatbot() {
                     </div>
                     {msg.role === "bot" && (
                       <div
-                        className={`flex gap-2 mt-1.5 ${
+                        className={`flex flex-wrap gap-1.5 mt-1.5 ${
                           isDark ? "text-zinc-500" : "text-zinc-400"
                         }`}
                       >
-                        <button
-                          onClick={() => speak(msg.content)}
-                          className="hover:text-orange transition-colors"
-                          aria-label="Read aloud"
-                        >
-                          <Volume2 size={14} />
-                        </button>
+                        {speaking ? (
+                          <button
+                            onClick={stopSpeaking}
+                            className="hover:text-red-400 transition-colors"
+                            aria-label="Stop speaking"
+                          >
+                            <VolumeX size={14} />
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => speak(msg.content)}
+                            className="hover:text-orange transition-colors"
+                            aria-label="Read aloud"
+                          >
+                            <Volume2 size={14} />
+                          </button>
+                        )}
                         <button
                           onClick={() => copyToClipboard(msg.content)}
                           className="hover:text-orange transition-colors"
@@ -382,13 +463,38 @@ export default function Chatbot() {
                         >
                           <Copy size={14} />
                         </button>
-                        <button
-                          onClick={() => shareContent(msg.content)}
-                          className="hover:text-orange transition-colors"
-                          aria-label="Share message"
-                        >
-                          <Share2 size={14} />
-                        </button>
+                        <div className="relative">
+                          <button
+                            onClick={() => setShowSharePopup(showSharePopup === i ? null : i)}
+                            className="hover:text-orange transition-colors"
+                            aria-label="Share message"
+                          >
+                            <Share2 size={14} />
+                          </button>
+                          <AnimatePresence>
+                            {showSharePopup === i && (
+                              <motion.div
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.9 }}
+                                className={`absolute bottom-full left-0 mb-2 flex gap-1.5 p-2 rounded-lg border shadow-xl ${
+                                  isDark ? "bg-zinc-800 border-zinc-700" : "bg-white border-zinc-200"
+                                }`}
+                              >
+                                {SOCIALS.map((s) => (
+                                  <button
+                                    key={s.id}
+                                    onClick={() => handleSocialShare(msg.content, s.url(msg.content))}
+                                    className={`transition-colors ${s.color}`}
+                                    aria-label={`Share on ${s.id}`}
+                                  >
+                                    <s.icon size={16} />
+                                  </button>
+                                ))}
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -405,10 +511,10 @@ export default function Chatbot() {
                     Preguntas frecuentes:
                   </p>
                   <div className="space-y-1.5">
-                    {suggestedQuestions.map((q, i) => (
+                    {[1,2,3,4,5,6].map((n) => (
                       <button
-                        key={i}
-                        onClick={() => handleSend(q)}
+                        key={n}
+                        onClick={() => handleSend(t(`chatbot.q${n}`))}
                         disabled={loading}
                         className={`block w-full text-left px-3 py-2 text-xs rounded-sm transition-colors disabled:opacity-50 ${
                           isDark
@@ -416,7 +522,7 @@ export default function Chatbot() {
                             : "bg-zinc-100 hover:bg-zinc-200 text-zinc-500 hover:text-zinc-700"
                         }`}
                       >
-                        {q}
+                        {t(`chatbot.q${n}`)}
                       </button>
                     ))}
                   </div>
