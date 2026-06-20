@@ -297,7 +297,7 @@ export default function Chatbot() {
             dragElastic={0}
             className={`${
               fullscreen
-                ? "fixed inset-4 sm:inset-8 z-[70]"
+                ? "fixed inset-x-4 sm:inset-x-8 top-4 sm:top-8 bottom-24 z-[70]"
                 : "fixed bottom-24 right-6 w-[380px] sm:w-[440px] h-[600px] z-[70]"
             } ${
               isDark ? "bg-zinc-900 border-zinc-800" : "bg-white border-zinc-200"
