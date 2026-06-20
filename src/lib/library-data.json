@@ -6,7 +6,7 @@
     "size": "9.4 MB",
     "pages": 72,
     "year": "2025",
-    "cover": "https://img.freepik.com/free-vector/welding-cartoon-banner-with-workers_33099-493.jpg",
+    "cover": "https://images.unsplash.com/photo-1560703650-ef3e0f254ae0?w=400&q=80",
     "descKey": "library.desc.sweiss",
     "url": "/manuals/manual-basico-soldadura-sweiss.pdf",
     "tags": ["SMAW", "GMAW", "GTAW", "FCAW", "SAW", "General"]
@@ -18,7 +18,7 @@
     "size": "8.8 MB",
     "pages": 21,
     "year": "2024",
-    "cover": "https://img.freepik.com/free-vector/industrial-welding-concept-illustration_114360-14298.jpg",
+    "cover": "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=400&q=80",
     "descKey": "library.desc.dcm",
     "url": "/manuals/guia-soldadura-basica-dcm.pdf",
     "tags": ["SMAW", "GMAW", "GTAW", "OFW", "General"]
