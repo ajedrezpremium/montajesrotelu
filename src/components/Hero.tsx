@@ -81,11 +81,11 @@ export default function Hero() {
     >
       <div className="absolute inset-0 z-0">
         <img
-          src="https://images.unsplash.com/photo-1749467140438-feda1a2bbbd8?w=1920&q=80"
+          src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=1920&q=85&fit=crop"
           alt=""
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-black/70" />
+        <div className="absolute inset-0 bg-gradient-to-br from-steel/80 via-steel/70 to-steel/60" />
       </div>
       <canvas
         ref={canvasRef}
@@ -102,14 +102,14 @@ export default function Hero() {
           className="absolute inset-0"
           style={{
             backgroundImage:
-              "radial-gradient(circle at 20% 50%, rgba(233,69,96,0.12) 0%, transparent 50%)",
+              "radial-gradient(circle at 20% 50%, rgba(233,69,96,0.25) 0%, transparent 60%)",
           }}
         />
         <div
           className="absolute inset-0"
           style={{
             backgroundImage:
-              "radial-gradient(circle at 80% 30%, rgba(10,22,40,0.6) 0%, transparent 50%)",
+              "radial-gradient(circle at 80% 30%, rgba(30,60,120,0.4) 0%, transparent 60%)",
           }}
         />
       </div>
