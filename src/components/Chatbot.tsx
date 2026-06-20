@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   MessageCircle, X, Send, Bot, User, Loader2,
-  Mic, MicOff, Volume2, Copy, Share2,
+  Mic, MicOff, Volume2, Copy, Share2, Maximize2, Minimize2,
 } from "lucide-react";
 import { findResponse, suggestedQuestions } from "@/lib/knowledge-base";
 import { useLang } from "@/lib/language";
@@ -43,6 +43,7 @@ export default function Chatbot() {
   const [loading, setLoading] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(true);
   const [listening, setListening] = useState(false);
+  const [fullscreen, setFullscreen] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const recognitionRef = useRef<any>(null);
@@ -232,7 +233,11 @@ export default function Chatbot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className={`fixed bottom-24 right-6 z-50 w-[360px] sm:w-[400px] h-[560px] ${
+            className={`fixed z-50 ${
+              fullscreen
+                ? "inset-4 sm:inset-8"
+                : "bottom-24 right-6 w-[380px] sm:w-[440px] h-[600px]"
+            } ${
               isDark ? "bg-zinc-900 border-zinc-800" : "bg-white border-zinc-200"
             } border rounded-lg shadow-2xl shadow-black/50 flex flex-col overflow-hidden`}
           >
@@ -279,6 +284,17 @@ export default function Chatbot() {
                 {loading && (
                   <Loader2 size={14} className="text-orange animate-spin" />
                 )}
+                <button
+                  onClick={() => setFullscreen(!fullscreen)}
+                  className={`transition-colors ${
+                    isDark
+                      ? "text-zinc-500 hover:text-white"
+                      : "text-zinc-400 hover:text-zinc-900"
+                  }`}
+                  aria-label={fullscreen ? "Minimize" : "Fullscreen"}
+                >
+                  {fullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
+                </button>
                 <button
                   onClick={() => setOpen(false)}
                   className={`transition-colors ${
