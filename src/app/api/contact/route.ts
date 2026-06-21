@@ -1,8 +1,13 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = req.headers.get("x-forwarded-for") || "unknown";
+    if (!rateLimit(`contact:${ip}`, 5, 60000)) {
+      return Response.json({ error: "Too many requests. Try again later." }, { status: 429 });
+    }
     const body = await req.json();
     const { name, email, phone, company, country, sector, description } = body;
 

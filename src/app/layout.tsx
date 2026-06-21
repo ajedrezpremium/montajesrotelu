@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const baseUrl = "https://rotelu-web.vercel.app";
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://rotelu-web.vercel.app";
 
 export const metadata: Metadata = {
   title: "ROTELU | Engineering Steel Solutions — Heavy Steel Fabrication & Certified Welding",
@@ -85,6 +85,7 @@ export default function RootLayout({
         <link rel="alternate" hrefLang="de" href={baseUrl} />
         <link rel="alternate" hrefLang="x-default" href={baseUrl} />
         <link rel="manifest" href="/manifest.json" />
+        <script dangerouslySetInnerHTML={{ __html: `if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js')}` }} />
         <link rel="preconnect" href="https://rotelu.es" />
         <link rel="preconnect" href="https://images.unsplash.com" />
         <link rel="preconnect" href="https://img.freepik.com" />

@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { searchManual } from "@/lib/rag";
+import { rateLimit } from "@/lib/rate-limit";
 
 const PROMPTS: Record<string, string> = {
   es: `Eres el ROTELU Engineering Assistant — experto mundial en soldadura industrial y estructuras metálicas.
@@ -96,6 +97,13 @@ export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = req.headers.get("x-forwarded-for") || "unknown";
+    if (!rateLimit(`chat:${ip}`, 20, 60000)) {
+      return new Response(JSON.stringify({ error: "Too many requests. Try again later." }), {
+        status: 429,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
     const { messages, lang } = await req.json();
     const systemLang = PROMPTS[lang] ? lang : "es";
     const systemPrompt = PROMPTS[systemLang] || PROMPTS["es"];
@@ -149,7 +157,7 @@ export async function POST(req: NextRequest) {
         headers: {
           Authorization: `Bearer ${apiKey}`,
           "Content-Type": "application/json",
-          "HTTP-Referer": "https://rotelu-web.vercel.app",
+          "HTTP-Referer": process.env.NEXT_PUBLIC_SITE_URL || "https://rotelu-web.vercel.app",
           "X-Title": "ROTELU",
         },
         body,

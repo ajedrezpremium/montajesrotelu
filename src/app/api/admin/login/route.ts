@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import crypto from "crypto";
+import { rateLimit } from "@/lib/rate-limit";
 
 function verifyToken(token: string): boolean {
   try {
@@ -27,6 +28,10 @@ function createToken(): string {
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = req.headers.get("x-forwarded-for") || "unknown";
+    if (!rateLimit(`login:${ip}`, 10, 60000)) {
+      return Response.json({ error: "Too many attempts. Try again later." }, { status: 429 });
+    }
     const { password } = await req.json();
     if (password === process.env.ADMIN_PASSWORD) {
       return Response.json({ token: createToken() });

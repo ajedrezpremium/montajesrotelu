@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import crypto from "crypto";
 
-const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
+const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
 function verifyToken(token: string): boolean {
   try { const secret = process.env.ADMIN_PASSWORD; if (!secret) return false; const p = token.split("."); if (p.length !== 2) return false; const pl = JSON.parse(Buffer.from(p[0], "base64").toString()); if (crypto.createHmac("sha256", secret).update(p[0]).digest("base64url") !== p[1]) return false; if (Date.now() > pl.exp) return false; return true; } catch { return false; }
 }
